@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" data-theme="light">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -316,16 +316,6 @@ body {
 [data-theme="dark"] .goal-card { filter: brightness(0.85) saturate(0.95); }
 [data-theme="dark"] .goal-card:active { filter: brightness(0.92); }
 
-.card-deco1 {
-  position: absolute; right: -14px; top: -14px;
-  width: 80px; height: 80px; border-radius: 50%;
-  background: rgba(255,255,255,0.1); pointer-events: none;
-}
-.card-deco2 {
-  position: absolute; right: 22px; bottom: -22px;
-  width: 58px; height: 58px; border-radius: 50%;
-  background: rgba(255,255,255,0.07); pointer-events: none;
-}
 
 .card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 9px; }
 
@@ -884,20 +874,15 @@ body {
           </div>
           <span class="app-logo-name">Savee</span>
         </div>
-        <div style="display:flex;gap:7px">
-          <button class="hdr-btn" onclick="openExportSheet()">
-            <span class="material-symbols-rounded">backup</span>
-          </button>
-        </div>
       </div>
     </div>
     <div class="summary-card">
-      <div class="summary-label">Total tabungan</div>
+      <div class="summary-label">Total Savings</div>
       <div class="summary-amount" id="totalAmt">Rp 0</div>
       <div class="summary-pills">
         <span class="summary-pill">
           <span class="material-symbols-rounded">trending_up</span>
-          <span id="activeCount">0</span> goal aktif
+          <span id="activeCount">0</span> active goals
         </span>
         <span class="summary-pill" id="totalTargetPill" style="display:none">
           <span class="material-symbols-rounded">flag</span>
@@ -906,7 +891,7 @@ body {
       </div>
     </div>
     <div class="sec-hdr">
-      <span class="sec-title">Goal tabungan</span>
+      <span class="sec-title">Savings Goals</span>
     </div>
   </div>
   <div class="screen-scroll">
@@ -917,24 +902,24 @@ body {
 <div class="screen hidden" id="screenStats">
   <div class="screen-fixed">
     <div class="stats-header">
-      <div class="stats-title">Statistik</div>
-      <div class="stats-sub">Pantau progres tabunganmu</div>
+      <div class="stats-title">Statistics</div>
+      <div class="stats-sub">Track your savings progress</div>
     </div>
     <div class="tab-bar">
       <button class="tab-btn active" id="tabGlobal" onclick="switchStatsTab('global')">Global</button>
-      <button class="tab-btn" id="tabHistory" onclick="switchStatsTab('history')">Riwayat</button>
+      <button class="tab-btn" id="tabHistory" onclick="switchStatsTab('history')">History</button>
     </div>
   </div>
   <div class="screen-scroll">
     <div class="tab-panel active" id="panelGlobal">
       <div class="stats-grid" id="statsGrid"></div>
-      <div class="sec-label">Progres per goal</div>
+      <div class="sec-label">Progress per goal</div>
       <div class="goal-progress-list" id="statsGoalList"></div>
     </div>
     <div class="tab-panel" id="panelHistory">
       <button class="hist-clear-btn" onclick="clearHistory()">
         <span class="material-symbols-rounded">delete_sweep</span>
-        Hapus semua riwayat
+        Clear all history
       </button>
       <div id="historyBody"></div>
     </div>
@@ -944,19 +929,19 @@ body {
 <div class="screen hidden" id="screenSettings">
   <div class="screen-fixed">
     <div class="settings-header">
-      <div class="settings-title">Pengaturan</div>
+      <div class="settings-title">Settings</div>
     </div>
   </div>
   <div class="screen-scroll">
     <div class="settings-section">
-      <div class="settings-section-label">Tampilan</div>
+      <div class="settings-section-label">Appearance</div>
       <div class="settings-row" onclick="toggleTheme()">
         <div class="srow-icon sri-p">
           <span class="material-symbols-rounded" id="themeIconSettings">dark_mode</span>
         </div>
         <div class="srow-content">
-          <div class="srow-label">Tema gelap</div>
-          <div class="srow-sub">Ganti tampilan terang / gelap</div>
+          <div class="srow-label">Dark Mode</div>
+          <div class="srow-sub">Switch between light and dark theme</div>
         </div>
         <label class="toggle-sw" onclick="event.stopPropagation()">
           <input type="checkbox" id="darkModeToggle" onchange="toggleThemeFromSwitch()">
@@ -965,14 +950,14 @@ body {
       </div>
     </div>
     <div class="settings-section">
-      <div class="settings-section-label">Keamanan</div>
+      <div class="settings-section-label">Security</div>
       <div class="settings-row">
         <div class="srow-icon sri-b">
           <span class="material-symbols-rounded">lock</span>
         </div>
         <div class="srow-content">
           <div class="srow-label">PIN Lock</div>
-          <div class="srow-sub" id="pinStatusText">Nonaktif</div>
+          <div class="srow-sub" id="pinStatusText">Disabled</div>
         </div>
         <label class="toggle-sw" onclick="event.stopPropagation()">
           <input type="checkbox" id="pinToggle" onchange="handlePinToggle()">
@@ -984,8 +969,8 @@ body {
           <span class="material-symbols-rounded">dialpad</span>
         </div>
         <div class="srow-content">
-          <div class="srow-label">Ganti PIN</div>
-          <div class="srow-sub">Atur PIN baru</div>
+          <div class="srow-label">Change PIN</div>
+          <div class="srow-sub">Set a new PIN</div>
         </div>
         <span class="material-symbols-rounded srow-chevron">chevron_right</span>
       </div>
@@ -997,8 +982,8 @@ body {
           <span class="material-symbols-rounded">backup</span>
         </div>
         <div class="srow-content">
-          <div class="srow-label">Ekspor &amp; Impor</div>
-          <div class="srow-sub">Backup atau pulihkan data</div>
+          <div class="srow-label">Export &amp; Import</div>
+          <div class="srow-sub">Backup or restore your data</div>
         </div>
         <span class="material-symbols-rounded srow-chevron">chevron_right</span>
       </div>
@@ -1007,25 +992,25 @@ body {
           <span class="material-symbols-rounded">delete_forever</span>
         </div>
         <div class="srow-content">
-          <div class="srow-label" style="color:#e11d48">Reset semua data</div>
-          <div class="srow-sub">Hapus semua goal &amp; riwayat</div>
+          <div class="srow-label" style="color:#e11d48">Reset all data</div>
+          <div class="srow-sub">Delete all goals &amp; history</div>
         </div>
         <span class="material-symbols-rounded srow-chevron">chevron_right</span>
       </div>
     </div>
     <div class="settings-section">
-      <div class="settings-section-label">Tentang</div>
+      <div class="settings-section-label">About</div>
       <div class="settings-row" style="cursor:default">
         <div class="srow-icon sri-p">
           <span class="material-symbols-rounded">wallet</span>
         </div>
         <div class="srow-content">
           <div class="srow-label">Savee</div>
-          <div class="srow-sub">Versi 3.2.0</div>
+          <div class="srow-sub">Version 3.3.0</div>
         </div>
       </div>
     </div>
-    <div class="app-version-tag">Savee v3.2 · Personal Savings Tracker</div>
+    <div class="app-version-tag">Savee v3.3 · Personal Savings Tracker</div>
   </div>
 </div>
 
@@ -1034,7 +1019,7 @@ body {
     <div class="detail-hdr">
       <button class="back-btn" onclick="goHome()">
         <span class="material-symbols-rounded">arrow_back_ios_new</span>
-        Kembali
+        Back
       </button>
       <div class="detail-hdr-right">
         <button class="icon-btn" onclick="openChartSheet(currentDetailId)">
@@ -1057,15 +1042,15 @@ body {
 <nav class="bottom-nav" id="bottomNav">
   <button class="nav-item active" id="navHome" onclick="navTo('home')">
     <span class="material-symbols-rounded">home</span>
-    <span class="nav-label">Beranda</span>
+    <span class="nav-label">Home</span>
   </button>
   <button class="nav-item" id="navStats" onclick="navTo('stats')">
     <span class="material-symbols-rounded">bar_chart</span>
-    <span class="nav-label">Statistik</span>
+    <span class="nav-label">Stats</span>
   </button>
   <button class="nav-item" id="navSettings" onclick="navTo('settings')">
     <span class="material-symbols-rounded">settings</span>
-    <span class="nav-label">Pengaturan</span>
+    <span class="nav-label">Settings</span>
   </button>
   <button class="nav-add" onclick="openAddSheet()">
     <span class="material-symbols-rounded">add</span>
@@ -1078,35 +1063,35 @@ body {
   <div class="sheet">
     <div class="sheet-handle"></div>
     <div class="sheet-head">
-      <div class="sheet-title" id="goalSheetTitle">Tambah goal baru</div>
+      <div class="sheet-title" id="goalSheetTitle">New goal</div>
       <button class="btn-close" onclick="closeSheet('goalSheet')"><span class="material-symbols-rounded">close</span></button>
     </div>
     <div class="sheet-body">
       <div class="form-group">
-        <label class="form-label">Nama goal</label>
-        <input class="form-input" id="fName" type="text" placeholder="Contoh: beli laptop, liburan...">
+        <label class="form-label">Goal name</label>
+        <input class="form-input" id="fName" type="text" placeholder="e.g. New laptop, vacation...">
       </div>
       <div class="form-group">
-        <label class="form-label">Target (Rp) — kosongkan untuk tak terbatas</label>
+        <label class="form-label">Target (Rp) — leave blank for unlimited</label>
         <input class="form-input" id="fTarget" type="number" inputmode="numeric" placeholder="0">
       </div>
       <div class="form-group">
-        <label class="form-label">Sudah terkumpul (Rp)</label>
+        <label class="form-label">Already saved (Rp)</label>
         <input class="form-input" id="fCurrent" type="number" inputmode="numeric" placeholder="0">
       </div>
       <div class="form-group">
-        <label class="form-label">Tanggal target</label>
+        <label class="form-label">Target date</label>
         <input class="form-input" id="fDeadline" type="date">
       </div>
       <div class="form-group">
-        <label class="form-label">Ikon</label>
+        <label class="form-label">Icon</label>
         <div class="icon-picker-grid" id="iconPicker"></div>
       </div>
       <div class="form-group">
-        <label class="form-label">Warna</label>
+        <label class="form-label">Color</label>
         <div class="color-row" id="colorPicker"></div>
       </div>
-      <button class="btn-primary" onclick="saveGoal()">Simpan goal</button>
+      <button class="btn-primary" onclick="saveGoal()">Save goal</button>
     </div>
   </div>
 </div>
@@ -1115,7 +1100,7 @@ body {
   <div class="sheet" style="max-height:88vh">
     <div class="sheet-handle"></div>
     <div class="sheet-head">
-      <div class="sheet-title" id="moneySheetTitle">Tambah uang</div>
+      <div class="sheet-title" id="moneySheetTitle">Add money</div>
       <button class="btn-close" onclick="closeSheet('moneySheet')"><span class="material-symbols-rounded">close</span></button>
     </div>
     <div class="money-goal-info">
@@ -1135,7 +1120,7 @@ body {
   <div class="sheet">
     <div class="sheet-handle"></div>
     <div class="sheet-head">
-      <div class="sheet-title">Riwayat nabung</div>
+      <div class="sheet-title">Savings history</div>
       <button class="btn-close" onclick="closeSheet('chartSheet')"><span class="material-symbols-rounded">close</span></button>
     </div>
     <div class="chart-goal-info">
@@ -1143,9 +1128,9 @@ body {
       <div class="chart-goal-name" id="chartGoalName"></div>
     </div>
     <div class="chart-tabs">
-      <button class="chart-tab active" id="chartTab7"  onclick="switchChartTab(7)">7 Hari</button>
-      <button class="chart-tab"        id="chartTab30" onclick="switchChartTab(30)">30 Hari</button>
-      <button class="chart-tab"        id="chartTab90" onclick="switchChartTab(90)">90 Hari</button>
+      <button class="chart-tab active" id="chartTab7"  onclick="switchChartTab(7)">7 Days</button>
+      <button class="chart-tab"        id="chartTab30" onclick="switchChartTab(30)">30 Days</button>
+      <button class="chart-tab"        id="chartTab90" onclick="switchChartTab(90)">90 Days</button>
     </div>
     <div class="chart-canvas-wrap"><canvas id="chartCanvas" height="160"></canvas></div>
     <div class="chart-summary" id="chartSummary"></div>
@@ -1156,32 +1141,32 @@ body {
   <div class="sheet">
     <div class="sheet-handle"></div>
     <div class="sheet-head">
-      <div class="sheet-title">Ekspor &amp; Impor</div>
+      <div class="sheet-title">Export &amp; Import</div>
       <button class="btn-close" onclick="closeSheet('exportSheet')"><span class="material-symbols-rounded">close</span></button>
     </div>
     <div class="sheet-body">
       <div class="export-section">
-        <p class="export-desc">Simpan semua data goal tabunganmu sebagai file JSON, atau impor dari backup sebelumnya.</p>
+        <p class="export-desc">Save all your savings goal data as a JSON file, or import from a previous backup.</p>
         <div class="export-btn-row">
           <button class="export-btn pri" onclick="exportData()">
             <span class="material-symbols-rounded">download</span>
-            Ekspor JSON
+            Export JSON
           </button>
           <button class="export-btn sec" onclick="document.getElementById('importFileInput').click()">
             <span class="material-symbols-rounded">upload</span>
-            Impor JSON
+            Import JSON
           </button>
         </div>
         <input type="file" id="importFileInput" accept=".json" style="display:none" onchange="importData(event)">
         <div class="divider-row">
           <div class="divider-line"></div>
-          <span class="divider-label">atau drag &amp; drop</span>
+          <span class="divider-label">or drag &amp; drop</span>
           <div class="divider-line"></div>
         </div>
         <div class="import-drop-zone" id="importDropZone" onclick="document.getElementById('importFileInput').click()">
           <span class="material-symbols-rounded">file_upload</span>
-          <p>Ketuk atau seret file JSON ke sini</p>
-          <span>Hanya file .json hasil ekspor Savee</span>
+          <p>Tap or drag a JSON file here</p>
+          <span>Only .json files exported from Savee</span>
         </div>
         <div class="divider-row" style="padding-top:14px">
           <div class="divider-line"></div>
@@ -1190,8 +1175,8 @@ body {
         </div>
         <div class="danger-zone">
           <div class="danger-zone-title">⚠️ Reset Data</div>
-          <p>Hapus semua goal, transaksi, dan riwayat secara permanen. Tidak bisa dibatalkan.</p>
-          <button class="btn-danger" onclick="resetAllData()">Hapus semua data</button>
+          <p>Permanently delete all goals, transactions, and history. This cannot be undone.</p>
+          <button class="btn-danger" onclick="resetAllData()">Delete all data</button>
         </div>
       </div>
     </div>
@@ -1205,8 +1190,8 @@ body {
     <div class="pin-logo-icon"><span class="material-symbols-rounded">wallet</span></div>
     <span class="pin-logo-name">Savee</span>
   </div>
-  <div class="pin-title" id="pinTitle">Selamat datang</div>
-  <div class="pin-subtitle" id="pinSubtitle">Masukkan PIN</div>
+  <div class="pin-title" id="pinTitle">Welcome back</div>
+  <div class="pin-subtitle" id="pinSubtitle">Enter your PIN</div>
   <div class="pin-dots" id="pinDots">
     <div class="pin-dot" id="pd0"></div>
     <div class="pin-dot" id="pd1"></div>
@@ -1228,7 +1213,7 @@ body {
     <button class="pin-key del" onclick="pinKey('del')"><span class="material-symbols-rounded">backspace</span></button>
   </div>
   <div class="pin-hint" id="pinHint"></div>
-  <button class="pin-reset-btn" id="pinResetBtn" onclick="resetPin()" style="display:none">Lupa PIN? Reset</button>
+  <button class="pin-reset-btn" id="pinResetBtn" onclick="resetPin()" style="display:none">Forgot PIN? Reset</button>
 </div>
 
 <div class="confetti-overlay hidden" id="confettiOverlay">
@@ -1304,7 +1289,7 @@ function colorHex(key) { return (COLORS.find(c => c.key === key) || COLORS[4]).h
 
 function fDate(s) {
   if (!s) return null;
-  return new Date(s).toLocaleDateString('id-ID', {day:'numeric',month:'short',year:'numeric'});
+  return new Date(s).toLocaleDateString('en-US', {day:'numeric',month:'short',year:'numeric'});
 }
 
 function esc(s) {
@@ -1360,7 +1345,7 @@ function applySettingsUI() {
   const ps = document.getElementById('pinStatusText');
   const cr = document.getElementById('changePinRow');
   if (pt) pt.checked = !!pinSaved;
-  if (ps) ps.textContent = pinSaved ? 'Aktif' : 'Nonaktif';
+  if (ps) ps.textContent = pinSaved ? 'Enabled' : 'Disabled';
   if (cr) cr.style.display = pinSaved ? 'flex' : 'none';
 }
 
@@ -1368,7 +1353,7 @@ function render() {
   renderStats();
   const el = document.getElementById('goalsList');
   if (!goals.length) {
-    el.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">wallet</span><p>Belum ada goal tabungan.<br>Ketuk tombol <strong>+</strong> untuk mulai!</p></div>';
+    el.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">wallet</span><p>No savings goals yet.<br>Tap <strong>+</strong> to get started!</p></div>';
     return;
   }
   el.innerHTML = goals.map((g,i) => renderCard(g,i)).join('');
@@ -1380,18 +1365,17 @@ function renderCard(g, i) {
   const offset = inf ? circ : circ * (1 - p / 100);
   const days = daysLeft(g.deadline), dl = dailySave(g);
   const isClosed = g.status !== 'active';
-  const daysStr = days !== null ? (days > 0 ? `${days} hari lagi` : days === 0 ? 'Hari ini!' : 'Waktu habis') : 'Tanpa batas waktu';
-  const dlStr = dl !== null ? (dl === 0 ? '🎉 Target tercapai!' : `Nabung Rp ${fRp(dl)}/hari`) : '';
+  const daysStr = days !== null ? (days > 0 ? `${days} days left` : days === 0 ? 'Today!' : 'Overdue') : 'No deadline';
+  const dlStr = dl !== null ? (dl === 0 ? '🎉 Goal reached!' : `Save Rp ${fRp(dl)}/day`) : '';
   const metaLine = [daysStr, dlStr].filter(Boolean).join(' · ');
   const ringInner = inf ? `<div class="ring-inf"><span class="material-symbols-rounded">all_inclusive</span></div>` : `<div class="ring-pct">${p}%</div>`;
-  const targetLabel = inf ? `<span class="material-symbols-rounded">all_inclusive</span>` : `dari Rp ${fRp(g.target)}`;
-  const overlay = isClosed ? `<div class="card-status-overlay"><span class="material-symbols-rounded">${g.status==='completed'?'check_circle':'cancel'}</span>${g.status==='completed'?'Selesai':'Dibatalkan'}</div>` : '';
+  const targetLabel = inf ? `<span class="material-symbols-rounded">all_inclusive</span>` : `of Rp ${fRp(g.target)}`;
+  const overlay = isClosed ? `<div class="card-status-overlay"><span class="material-symbols-rounded">${g.status==='completed'?'check_circle':'cancel'}</span>${g.status==='completed'?'Completed':'Cancelled'}</div>` : '';
   const btnRow = !isClosed
     ? `<div class="card-btn-row" onclick="event.stopPropagation()"><button class="card-btn" onclick="openMoneySheet('add','${g.id}')"><span class="material-symbols-rounded">add</span></button><button class="card-btn" onclick="openMoneySheet('sub','${g.id}')"><span class="material-symbols-rounded">remove</span></button></div>`
     : `<div class="card-btn-row" onclick="event.stopPropagation()"><button class="card-btn" onclick="restoreGoal('${g.id}')"><span class="material-symbols-rounded">restart_alt</span></button></div>`;
   return `<div class="goal-card" onclick="goDetail('${g.id}')" style="animation-delay:${i*.06}s">
     <div class="goal-card-inner ${g.color}">
-      <div class="card-deco1"></div><div class="card-deco2"></div>
       ${overlay}
       <div class="card-top">
         <div class="card-icon-box">${g.emoji||'🎯'}</div>
@@ -1458,34 +1442,34 @@ function renderGlobalStats() {
   })();
   const fS = n => n>=1000000 ? (n/1000000).toFixed(1)+'jt' : n>=1000 ? Math.round(n/1000)+'rb' : fRp(n);
   document.getElementById('statsGrid').innerHTML = `
-    <div class="stats-card"><div class="stats-card-icon sci-p"><span class="material-symbols-rounded">savings</span></div><div class="stats-card-val">Rp ${fS(totalSaved)}</div><div class="stats-card-lbl">Total terkumpul</div></div>
-    <div class="stats-card"><div class="stats-card-icon sci-b"><span class="material-symbols-rounded">flag</span></div><div class="stats-card-val">Rp ${fS(totalTarget)}</div><div class="stats-card-lbl">Total target aktif</div></div>
-    <div class="stats-card"><div class="stats-card-icon sci-g"><span class="material-symbols-rounded">arrow_upward</span></div><div class="stats-card-val">Rp ${fS(totalIn)}</div><div class="stats-card-lbl">Total masuk</div></div>
-    <div class="stats-card"><div class="stats-card-icon sci-r"><span class="material-symbols-rounded">arrow_downward</span></div><div class="stats-card-val">Rp ${fS(totalOut)}</div><div class="stats-card-lbl">Total keluar</div></div>
-    <div class="stats-card"><div class="stats-card-icon sci-a"><span class="material-symbols-rounded">trending_up</span></div><div class="stats-card-val">Rp ${fS(avgDaily)}</div><div class="stats-card-lbl">Rata-rata/hari</div></div>
-    <div class="stats-card"><div class="stats-card-icon sci-t"><span class="material-symbols-rounded">check_circle</span></div><div class="stats-card-val">${completed.length} goal</div><div class="stats-card-lbl">Selesai</div></div>`;
+    <div class="stats-card"><div class="stats-card-icon sci-p"><span class="material-symbols-rounded">savings</span></div><div class="stats-card-val">Rp ${fS(totalSaved)}</div><div class="stats-card-lbl">Total saved</div></div>
+    <div class="stats-card"><div class="stats-card-icon sci-b"><span class="material-symbols-rounded">flag</span></div><div class="stats-card-val">Rp ${fS(totalTarget)}</div><div class="stats-card-lbl">Active target</div></div>
+    <div class="stats-card"><div class="stats-card-icon sci-g"><span class="material-symbols-rounded">arrow_upward</span></div><div class="stats-card-val">Rp ${fS(totalIn)}</div><div class="stats-card-lbl">Total in</div></div>
+    <div class="stats-card"><div class="stats-card-icon sci-r"><span class="material-symbols-rounded">arrow_downward</span></div><div class="stats-card-val">Rp ${fS(totalOut)}</div><div class="stats-card-lbl">Total out</div></div>
+    <div class="stats-card"><div class="stats-card-icon sci-a"><span class="material-symbols-rounded">trending_up</span></div><div class="stats-card-val">Rp ${fS(avgDaily)}</div><div class="stats-card-lbl">Daily avg</div></div>
+    <div class="stats-card"><div class="stats-card-icon sci-t"><span class="material-symbols-rounded">check_circle</span></div><div class="stats-card-val">${completed.length} goals</div><div class="stats-card-lbl">Completed</div></div>`;
   const glist = goals.filter(g => !isInfinite(g) && g.target>0).sort((a,b) => pct(b)-pct(a));
   document.getElementById('statsGoalList').innerHTML = glist.length
     ? glist.map(g => {
         const p2 = pct(g);
         return `<div class="goal-progress-row"><div class="gpr-emoji">${g.emoji||'🎯'}</div><div class="gpr-info"><div class="gpr-name">${esc(g.name)}</div><div class="gpr-bar"><div class="gpr-fill" style="width:${p2}%;background:${colorHex(g.color)}"></div></div></div><div class="gpr-pct">${p2}%</div></div>`;
       }).join('')
-    : '<div style="padding:0 0 8px;color:var(--text3);font-size:0.78rem;font-weight:500;padding:0 2px">Belum ada goal dengan target</div>';
+    : '<div style="padding:0 0 8px;color:var(--text3);font-size:0.78rem;font-weight:500;padding:0 2px">No goals with a target yet</div>';
 }
 
 function renderHistoryPanel() {
   const body = document.getElementById('historyBody');
   if (!notifHistory.length) {
-    body.innerHTML = '<div class="hist-empty"><span class="material-symbols-rounded">history</span><p>Belum ada aktivitas.<br>Riwayat akan muncul di sini.</p></div>';
+    body.innerHTML = '<div class="hist-empty"><span class="material-symbols-rounded">history</span><p>No activity yet.<br>History will appear here.</p></div>';
     return;
   }
   const iconMap = {ok:'check_circle',err:'error',info:'info'};
-  const labelMap = {ok:'Berhasil',err:'Gagal',info:'Info'};
+  const labelMap = {ok:'Success',err:'Failed',info:'Info'};
   const groups = {};
   notifHistory.forEach(h => {
     const d = new Date(h.ts), now = new Date();
     const diff = Math.floor((now-d)/86400000);
-    const label = diff===0 ? 'Hari ini' : diff===1 ? 'Kemarin' : d.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
+    const label = diff===0 ? 'Today' : diff===1 ? 'Yesterday' : d.toLocaleDateString('en-US',{day:'numeric',month:'long',year:'numeric'});
     if (!groups[label]) groups[label] = [];
     groups[label].push(h);
   });
@@ -1510,17 +1494,17 @@ function renderDetail(id) {
   const hero = document.getElementById('detailHero');
   hero.className = `detail-hero ${g.color}`;
   const heroTarget = inf ? `<span class="material-symbols-rounded">all_inclusive</span>` : `Rp ${fRp(g.target)}`;
-  const heroPct = inf ? `<div class="detail-hero-pct">Target tak terbatas</div>` : `<div class="detail-hero-bar"><div class="detail-hero-fill" style="width:${p}%"></div></div><div class="detail-hero-pct">${p}% tercapai</div>`;
+  const heroPct = inf ? `<div class="detail-hero-pct">Unlimited target</div>` : `<div class="detail-hero-bar"><div class="detail-hero-fill" style="width:${p}%"></div></div><div class="detail-hero-pct">${p}% reached</div>`;
   hero.innerHTML = `<div class="card-deco1"></div><div class="card-deco2"></div><div class="detail-hero-inner"><span class="detail-hero-icon">${g.emoji||'🎯'}</span><div class="detail-hero-label">${esc(g.name)}</div><div class="detail-hero-amount">Rp ${fRp(g.current)}</div><div class="detail-hero-target">Target: ${heroTarget}</div>${heroPct}</div>`;
-  const daysStr = days!==null ? (days>0?`${days} hari`:days===0?'Hari ini':'Terlewat') : '—';
-  const dlStr = dl!==null ? (dl===0?'🎉 Tercapai':`Rp ${fRp(dl)}/hari`) : '—';
+  const daysStr = days!==null ? (days>0?`${days} days`:days===0?'Today':'Overdue') : '—';
+  const dlStr = dl!==null ? (dl===0?'🎉 Reached':`Rp ${fRp(dl)}/day`) : '—';
   const sisaTarget = inf ? `<div class="stat-val"><span class="material-symbols-rounded">all_inclusive</span></div>` : `<div class="stat-val">Rp ${fRp(Math.max(0,g.target-g.current))}</div>`;
-  document.getElementById('detailStats').innerHTML = `<div class="stat-card"><div class="stat-label">Sisa hari</div><div class="stat-val">${daysStr}</div></div><div class="stat-card"><div class="stat-label">Nabung/hari</div><div class="stat-val">${dlStr}</div></div><div class="stat-card"><div class="stat-label">Sisa target</div>${sisaTarget}</div><div class="stat-card"><div class="stat-label">Deadline</div><div class="stat-val" style="font-size:0.78rem">${fDate(g.deadline)||'—'}</div></div>`;
+  document.getElementById('detailStats').innerHTML = `<div class="stat-card"><div class="stat-label">Days left</div><div class="stat-val">${daysStr}</div></div><div class="stat-card"><div class="stat-label">Save/day</div><div class="stat-val">${dlStr}</div></div><div class="stat-card"><div class="stat-label">Remaining</div>${sisaTarget}</div><div class="stat-card"><div class="stat-label">Deadline</div><div class="stat-val" style="font-size:0.78rem">${fDate(g.deadline)||'—'}</div></div>`;
   let acts = '';
   if (!isClosed) {
-    acts = `<button class="action-btn ab-add" onclick="openMoneySheet('add','${g.id}')"><span class="material-symbols-rounded">add</span>Tambah</button><button class="action-btn ab-sub" onclick="openMoneySheet('sub','${g.id}')"><span class="material-symbols-rounded">remove</span>Kurangi</button><button class="action-btn ab-ok" onclick="completeGoal('${g.id}')"><span class="material-symbols-rounded">check_circle</span>Selesai</button><button class="action-btn ab-can" onclick="cancelGoal('${g.id}')"><span class="material-symbols-rounded">cancel</span>Batalkan</button>`;
+    acts = `<button class="action-btn ab-add" onclick="openMoneySheet('add','${g.id}')"><span class="material-symbols-rounded">add</span>Add</button><button class="action-btn ab-sub" onclick="openMoneySheet('sub','${g.id}')"><span class="material-symbols-rounded">remove</span>Withdraw</button><button class="action-btn ab-ok" onclick="completeGoal('${g.id}')"><span class="material-symbols-rounded">check_circle</span>Complete</button><button class="action-btn ab-can" onclick="cancelGoal('${g.id}')"><span class="material-symbols-rounded">cancel</span>Cancel</button>`;
   } else {
-    acts = `<button class="action-btn ab-res" onclick="restoreGoal('${g.id}')"><span class="material-symbols-rounded">restart_alt</span>Aktifkan lagi</button><button class="action-btn ab-del" onclick="deleteGoal('${g.id}')"><span class="material-symbols-rounded">delete</span>Hapus</button>`;
+    acts = `<button class="action-btn ab-res" onclick="restoreGoal('${g.id}')"><span class="material-symbols-rounded">restart_alt</span>Reactivate</button><button class="action-btn ab-del" onclick="deleteGoal('${g.id}')"><span class="material-symbols-rounded">delete</span>Delete</button>`;
   }
   document.getElementById('detailActions').innerHTML = acts;
   renderMilestoneRow(g);
@@ -1558,7 +1542,7 @@ function buildIP(sel) {
 
 function openAddSheet() {
   editingId = null; selColor = COLORS[4].key; selIcon = ICONS[0];
-  document.getElementById('goalSheetTitle').textContent = 'Tambah goal baru';
+  document.getElementById('goalSheetTitle').textContent = 'New goal';
   document.getElementById('fName').value = '';
   document.getElementById('fTarget').value = '';
   document.getElementById('fCurrent').value = '';
@@ -1585,14 +1569,14 @@ function saveGoal() {
   const target = parseFloat(document.getElementById('fTarget').value)||0;
   const current = Math.max(0, parseFloat(document.getElementById('fCurrent').value)||0);
   const deadline = document.getElementById('fDeadline').value;
-  if (!name) { notif('Nama goal tidak boleh kosong!', 'err'); return; }
+  if (!name) { notif('Goal name cannot be empty!', 'err'); return; }
   if (editingId) {
     const i = goals.findIndex(g => g.id==editingId);
     if (i!==-1) goals[i] = {...goals[i], name, target, current, deadline, color:selColor, emoji:selIcon};
-    notif('Goal berhasil diperbarui', 'ok');
+    notif('Goal updated successfully', 'ok');
   } else {
     goals.unshift({id:uid(), name, target, current, deadline, color:selColor, emoji:selIcon, status:'active', created:Date.now(), txns:[]});
-    notif('Goal baru ditambahkan! 🎯', 'ok');
+    notif('New goal added! 🎯', 'ok');
   }
   save(); render();
   closeSheet('goalSheet');
@@ -1603,12 +1587,12 @@ function openMoneySheet(mode, id) {
   moneyMode = mode; moneyGoalId = id; moneyVal = '';
   const g = goals.find(x => x.id==id);
   if (!g) return;
-  document.getElementById('moneySheetTitle').textContent = mode==='add' ? 'Tambah uang' : 'Kurangi uang';
+  document.getElementById('moneySheetTitle').textContent = mode==='add' ? 'Add money' : 'Withdraw money';
   document.getElementById('moneyGoalDot').style.background = colorHex(g.color);
   document.getElementById('moneyGoalName').textContent = g.name;
   document.getElementById('moneyDisplay').textContent = '0';
   document.getElementById('moneyDisplay').style.color = mode==='add' ? 'var(--text)' : '#e11d48';
-  document.getElementById('moneyHint').textContent = mode==='add' ? `Terkumpul: Rp ${fRp(g.current)}` : `Saldo: Rp ${fRp(g.current)}`;
+  document.getElementById('moneyHint').textContent = mode==='add' ? `Saved: Rp ${fRp(g.current)}` : `Balance: Rp ${fRp(g.current)}`;
   const chips = mode==='add' ? [10000,25000,50000,100000,200000,500000] : [10000,50000,100000,g.current].filter(v => v>0 && v<=g.current).slice(0,5);
   buildQuickChips(chips); buildNumpad(mode);
   openSheet('moneySheet');
@@ -1624,7 +1608,7 @@ function buildNumpad(mode) {
   const keys = ['1','2','3','4','5','6','7','8','9','000','0','del'];
   document.getElementById('numpadGrid').innerHTML = keys.map(k =>
     k==='del' ? `<button class="numpad-key del" onclick="numpadKey('del')"><span class="material-symbols-rounded">backspace</span></button>` : `<button class="numpad-key" onclick="numpadKey('${k}')">${k}</button>`
-  ).join('') + `<button class="numpad-confirm ${mode==='add'?'add-mode':'sub-mode'}" onclick="confirmMoney()">${mode==='add'?'Tambahkan':'Kurangi'}</button>`;
+  ).join('') + `<button class="numpad-confirm ${mode==='add'?'add-mode':'sub-mode'}" onclick="confirmMoney()">${mode==='add'?'Add':'Withdraw'}</button>`;
 }
 
 function numpadKey(k) {
@@ -1635,7 +1619,7 @@ function numpadKey(k) {
 
 function confirmMoney() {
   const amount = parseInt(moneyVal)||0;
-  if (amount<=0) { notif('Masukkan jumlah yang valid', 'err'); return; }
+  if (amount<=0) { notif('Please enter a valid amount', 'err'); return; }
   const idx = goals.findIndex(g => g.id==moneyGoalId);
   if (idx===-1) return;
   const prevPct2 = pct(goals[idx]);
@@ -1643,24 +1627,24 @@ function confirmMoney() {
     goals[idx].current += amount;
     if (!goals[idx].txns) goals[idx].txns = [];
     goals[idx].txns.push({ts:Date.now(), amt:amount, type:'add'});
-    notif(`+Rp ${fRp(amount)} berhasil ditambahkan`, 'ok', goals[idx].name);
+    notif(`+Rp ${fRp(amount)} added successfully`, 'ok', goals[idx].name);
     checkMilestones(goals[idx], prevPct2);
   } else {
-    if (amount>goals[idx].current) { notif('Saldo tidak cukup!', 'err'); return; }
+    if (amount>goals[idx].current) { notif('Insufficient balance!', 'err'); return; }
     goals[idx].current -= amount;
     if (!goals[idx].txns) goals[idx].txns = [];
     goals[idx].txns.push({ts:Date.now(), amt:-amount, type:'sub'});
-    notif(`Rp ${fRp(amount)} berhasil dikurangi`, 'info', goals[idx].name);
+    notif(`Rp ${fRp(amount)} withdrawn`, 'info', goals[idx].name);
   }
   save(); render();
   closeSheet('moneySheet');
   if (currentDetailId==moneyGoalId) renderDetail(moneyGoalId);
 }
 
-function completeGoal(id) { const i=goals.findIndex(g=>g.id==id); if(i===-1)return; goals[i].status='completed'; save();render();renderDetail(id); notif('Goal selesai! Luar biasa! 🎉','ok',goals[i].name); }
-function cancelGoal(id)   { const i=goals.findIndex(g=>g.id==id); if(i===-1)return; goals[i].status='cancelled'; save();render();renderDetail(id); notif('Goal dibatalkan','err',goals[i].name); }
-function restoreGoal(id)  { const i=goals.findIndex(g=>g.id==id); if(i===-1)return; goals[i].status='active'; save();render(); if(currentDetailId==id)renderDetail(id); notif('Goal diaktifkan kembali','info',goals[i].name); }
-function deleteGoal(id)   { goals=goals.filter(g=>g.id!=id); save();goHome(); notif('Goal berhasil dihapus','err'); }
+function completeGoal(id) { const i=goals.findIndex(g=>g.id==id); if(i===-1)return; goals[i].status='completed'; save();render();renderDetail(id); notif('Goal completed! Amazing! 🎉','ok',goals[i].name); }
+function cancelGoal(id)   { const i=goals.findIndex(g=>g.id==id); if(i===-1)return; goals[i].status='cancelled'; save();render();renderDetail(id); notif('Goal cancelled','err',goals[i].name); }
+function restoreGoal(id)  { const i=goals.findIndex(g=>g.id==id); if(i===-1)return; goals[i].status='active'; save();render(); if(currentDetailId==id)renderDetail(id); notif('Goal reactivated','info',goals[i].name); }
+function deleteGoal(id)   { goals=goals.filter(g=>g.id!=id); save();goHome(); notif('Goal deleted','err'); }
 
 function notif(title, type='ok', sub='') {
   const bar = document.getElementById('notifBar');
@@ -1687,8 +1671,8 @@ function initPin() {
   const el = document.getElementById('pinScreen');
   if (!saved) { el.classList.add('hidden'); return; }
   pinStep = 'verify';
-  document.getElementById('pinTitle').textContent = 'Selamat datang';
-  document.getElementById('pinSubtitle').textContent = 'Masukkan PIN';
+  document.getElementById('pinTitle').textContent = 'Welcome back';
+  document.getElementById('pinSubtitle').textContent = 'Enter your PIN';
   document.getElementById('pinHint').textContent = '';
   document.getElementById('pinResetBtn').style.display = 'block';
   el.classList.remove('hidden');
@@ -1717,17 +1701,17 @@ function handlePinComplete() {
     else { for(let i=0;i<4;i++) document.getElementById(`pd${i}`).classList.add('error'); setTimeout(()=>{pinValue='';updatePinDots();},600); }
   } else if (pinStep==='setup1') {
     pinSetupFirst=pinValue; pinStep='setup2';
-    document.getElementById('pinSubtitle').textContent='Ulangi PIN';
+    document.getElementById('pinSubtitle').textContent='Repeat PIN';
     document.getElementById('pinHint').textContent='';
     pinValue=''; updatePinDots();
   } else if (pinStep==='setup2') {
     if (pinValue===pinSetupFirst) {
       localStorage.setItem('savee_pin', pinValue);
       document.getElementById('pinScreen').classList.add('hidden');
-      notif('PIN berhasil dibuat 🔒','ok'); applySettingsUI();
+      notif('PIN created successfully 🔒','ok'); applySettingsUI();
     } else {
       for(let i=0;i<4;i++) document.getElementById(`pd${i}`).classList.add('error');
-      setTimeout(()=>{ pinStep='setup1';pinSetupFirst='';pinValue='';updatePinDots(); document.getElementById('pinSubtitle').textContent='Buat PIN 4 digit baru'; document.getElementById('pinHint').textContent='PIN tidak cocok, coba lagi'; },600);
+      setTimeout(()=>{ pinStep='setup1';pinSetupFirst='';pinValue='';updatePinDots(); document.getElementById('pinSubtitle').textContent='Create a 4-digit PIN'; document.getElementById('pinHint').textContent='PINs do not match, try again'; },600);
     }
   }
 }
@@ -1735,7 +1719,7 @@ function handlePinComplete() {
 function resetPin() {
   localStorage.removeItem('savee_pin');
   pinStep='setup1'; pinValue=''; pinSetupFirst='';
-  document.getElementById('pinSubtitle').textContent='Buat PIN baru';
+  document.getElementById('pinSubtitle').textContent='Create a new PIN';
   document.getElementById('pinHint').textContent='';
   document.getElementById('pinResetBtn').style.display='none';
   updatePinDots();
@@ -1744,17 +1728,17 @@ function resetPin() {
 function handlePinToggle() {
   if (!document.getElementById('pinToggle').checked) {
     localStorage.removeItem('savee_pin');
-    document.getElementById('pinStatusText').textContent='Nonaktif';
+    document.getElementById('pinStatusText').textContent='Disabled';
     document.getElementById('changePinRow').style.display='none';
-    notif('PIN dinonaktifkan','info');
+    notif('PIN disabled','info');
   } else { setupNewPin(); }
 }
 
 function setupNewPin() {
   pinStep='setup1'; pinValue=''; pinSetupFirst='';
-  document.getElementById('pinTitle').textContent='Buat PIN';
-  document.getElementById('pinSubtitle').textContent='Buat PIN 4 digit baru';
-  document.getElementById('pinHint').textContent='PIN digunakan untuk melindungi data tabunganmu';
+  document.getElementById('pinTitle').textContent='Create PIN';
+  document.getElementById('pinSubtitle').textContent='Create a 4-digit PIN';
+  document.getElementById('pinHint').textContent='Your PIN protects your savings data';
   document.getElementById('pinResetBtn').style.display='none';
   document.getElementById('pinScreen').classList.remove('hidden');
   updatePinDots();
@@ -1790,7 +1774,7 @@ function renderChart(id, days) {
     const ds=new Date(d); ds.setHours(0,0,0,0);
     const de=new Date(d); de.setHours(23,59,59,999);
     const dt=txns.filter(t=>t.ts>=ds.getTime()&&t.ts<=de.getTime()&&t.type==='add').reduce((s,t)=>s+t.amt,0);
-    labels.push(days<=7 ? d.toLocaleDateString('id-ID',{weekday:'short'}) : d.toLocaleDateString('id-ID',{day:'numeric',month:'short'}));
+    labels.push(days<=7 ? d.toLocaleDateString('en-US',{weekday:'short'}) : d.toLocaleDateString('en-US',{day:'numeric',month:'short'}));
     data.push(dt);
   }
   const isDark=document.documentElement.getAttribute('data-theme')==='dark';
@@ -1810,7 +1794,7 @@ function renderChart(id, days) {
   });
   const total=data.reduce((s,v)=>s+v,0),active=data.filter(v=>v>0).length,best=Math.max(...data,0);
   const fS=n=>n>=1000000?(n/1000000).toFixed(1)+'jt':n>=1000?Math.round(n/1000)+'rb':fRp(n);
-  document.getElementById('chartSummary').innerHTML=`<div class="chart-stat"><div class="chart-stat-val">${fS(total)}</div><div class="chart-stat-lbl">Total</div></div><div class="chart-stat"><div class="chart-stat-val">${active} hari</div><div class="chart-stat-lbl">Aktif</div></div><div class="chart-stat"><div class="chart-stat-val">${fS(best)}</div><div class="chart-stat-lbl">Terbanyak</div></div>`;
+  document.getElementById('chartSummary').innerHTML=`<div class="chart-stat"><div class="chart-stat-val">${fS(total)}</div><div class="chart-stat-lbl">Total</div></div><div class="chart-stat"><div class="chart-stat-val">${active} days</div><div class="chart-stat-lbl">Active</div></div><div class="chart-stat"><div class="chart-stat-val">${fS(best)}</div><div class="chart-stat-lbl">Best day</div></div>`;
 }
 
 function openExportSheet() { openSheet('exportSheet'); setupDropZone(); }
@@ -1831,32 +1815,32 @@ function exportData() {
   const a=document.createElement('a'); a.href=url; a.download=`savee-backup-${new Date().toISOString().slice(0,10)}.json`;
   document.body.appendChild(a); a.click();
   setTimeout(()=>{URL.revokeObjectURL(url);a.remove();},1000);
-  notif('Data berhasil diekspor 📦','ok');
+  notif('Data exported successfully 📦','ok');
 }
 
 function importData(e) { const file=e.target.files[0]; if(!file)return; e.target.value=''; processImportFile(file); }
 
 function processImportFile(file) {
-  if (!file.name.endsWith('.json')) { notif('Hanya file .json yang didukung','err'); return; }
+  if (!file.name.endsWith('.json')) { notif('Only .json files are supported','err'); return; }
   const reader=new FileReader();
   reader.onload=ev=>{
     try {
       const data=JSON.parse(ev.target.result);
-      if (!data.goals||!Array.isArray(data.goals)) throw new Error('Format tidak valid');
+      if (!data.goals||!Array.isArray(data.goals)) throw new Error('Invalid format');
       goals=data.goals.map(g=>({...g,txns:Array.isArray(g.txns)?g.txns:[]}));
       if (data.notifHistory&&Array.isArray(data.notifHistory)) notifHistory=data.notifHistory;
-      save();saveHistory();render();closeSheet('exportSheet');notif(`${goals.length} goal berhasil diimpor ✅`,'ok');
-    } catch { notif('File tidak valid atau rusak','err'); }
+      save();saveHistory();render();closeSheet('exportSheet');notif(`${goals.length} goals imported ✅`,'ok');
+    } catch { notif('Invalid or corrupted file','err'); }
   };
   reader.readAsText(file);
 }
 
 function resetAllData() {
-  if (!confirm('Yakin ingin menghapus SEMUA data? Tindakan ini tidak bisa dibatalkan.')) return;
+  if (!confirm('Are you sure you want to delete ALL data? This cannot be undone.')) return;
   goals=[];notifHistory=[];
   ['savee_v3','savee_history','savee_pin','tabungin_v2','tabungin_history','tabungin_pin'].forEach(k=>localStorage.removeItem(k));
   save();saveHistory();render();closeSheet('exportSheet');applySettingsUI();
-  notif('Semua data telah dihapus','info');
+  notif('All data deleted','info');
 }
 
 const MILESTONES=[25,50,75,100];
@@ -1873,7 +1857,7 @@ function showConfetti(g, milestone) {
   overlay.classList.remove('hidden');
   overlay.style.background=`linear-gradient(135deg,${colorHex(g.color)}cc,${colorHex(g.color)}88)`;
   const isComplete=milestone===100;
-  msg.innerHTML=`<span class="confetti-emoji">${isComplete?'🏆':milestone===75?'🔥':milestone===50?'⭐':'🎯'}</span><div class="confetti-title">${isComplete?'Target Tercapai!':`${milestone}% Tercapai!`}</div><div class="confetti-sub">${esc(g.name)}</div>`;
+  msg.innerHTML=`<span class="confetti-emoji">${isComplete?'🏆':milestone===75?'🔥':milestone===50?'⭐':'🎯'}</span><div class="confetti-title">${isComplete?'Goal Reached!':`${milestone}% There!`}</div><div class="confetti-sub">${esc(g.name)}</div>`;
   spawnConfetti();
   setTimeout(()=>{overlay.classList.add('hidden');document.getElementById('confettiCanvas').innerHTML='';},3200);
 }

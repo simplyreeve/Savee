@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tabungin-v2';
+const CACHE_NAME = 'Savee-v3.3';
 const ASSETS = [
   '/index.html',
   '/manifest.json',
