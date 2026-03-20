@@ -15,8 +15,13 @@
 <link rel="apple-touch-icon" href="icons/icon-152.png">
 <title>Savee</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" rel="stylesheet">
+</noscript>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -231,6 +236,40 @@ body {
 
 .sec-hdr { display: flex; align-items: center; justify-content: space-between; padding: 0 18px; margin-bottom: 11px; }
 .sec-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text2); }
+
+.sort-btn {
+  display: flex; align-items: center; gap: 4px;
+  background: var(--surf); border: 1px solid var(--border);
+  border-radius: 8px; padding: 5px 9px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.68rem; font-weight: 700;
+  color: var(--text2); cursor: pointer;
+  box-shadow: var(--sh-sm); transition: background .15s, color .15s, var(--tt);
+}
+.sort-btn:active { background: var(--surf2); }
+.sort-btn .material-symbols-rounded { font-size: 14px; }
+.sort-btn.active { background: rgba(108,99,255,0.1); color: var(--accent); border-color: rgba(108,99,255,0.2); }
+
+.sort-menu {
+  position: fixed; z-index: 300;
+  background: var(--surf); border-radius: var(--rsm);
+  box-shadow: var(--sh-md); border: 1px solid var(--border);
+  overflow: hidden; min-width: 150px;
+  opacity: 0; transform: scale(0.92) translateY(-6px); transform-origin: top right;
+  pointer-events: none;
+  transition: opacity .16s ease, transform .16s cubic-bezier(.4,0,.2,1), var(--tt);
+}
+.sort-menu.open { opacity: 1; transform: scale(1) translateY(0); pointer-events: all; }
+.sort-menu-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 11px 14px; font-size: 0.82rem; font-weight: 600;
+  color: var(--text); cursor: pointer; transition: background .12s;
+  white-space: nowrap;
+}
+.sort-menu-item:hover, .sort-menu-item:active { background: var(--surf2); }
+.sort-menu-item.selected { color: var(--accent); }
+.sort-menu-item .material-symbols-rounded { font-size: 16px; color: var(--text3); }
+.sort-menu-item.selected .material-symbols-rounded { color: var(--accent); }
+.sort-menu-divider { height: 1px; background: var(--border); }
 
 .goals-list { padding: 0 14px; display: flex; flex-direction: column; gap: 10px; }
 
@@ -791,9 +830,23 @@ body {
         <span class="summary-pill" id="totalTargetPill" style="display:none"><span class="material-symbols-rounded">flag</span><span id="totalTarget"></span></span>
       </div>
     </div>
-    <div class="sec-hdr"><span class="sec-title">Savings Goals</span></div>
+    <div class="sec-hdr">
+      <span class="sec-title">Savings Goals</span>
+      <button class="sort-btn" id="sortBtn" onclick="toggleSortMenu()">
+        <span class="material-symbols-rounded">sort</span>
+        <span id="sortBtnLabel">Newest</span>
+      </button>
+    </div>
   </div>
   <div class="screen-scroll"><div class="goals-list" id="goalsList"></div></div>
+</div>
+
+<div class="sort-menu" id="sortMenu">
+  <div class="sort-menu-item" data-sort="newest" onclick="setSort('newest')"><span class="material-symbols-rounded">schedule</span>Newest first</div>
+  <div class="sort-menu-item" data-sort="oldest" onclick="setSort('oldest')"><span class="material-symbols-rounded">history</span>Oldest first</div>
+  <div class="sort-menu-divider"></div>
+  <div class="sort-menu-item" data-sort="az" onclick="setSort('az')"><span class="material-symbols-rounded">sort_by_alpha</span>A → Z</div>
+  <div class="sort-menu-item" data-sort="za" onclick="setSort('za')"><span class="material-symbols-rounded">sort_by_alpha</span>Z → A</div>
 </div>
 
 <div class="screen hidden" id="screenStats">
@@ -877,10 +930,10 @@ body {
       <div class="settings-section-label">About</div>
       <div class="settings-row" style="cursor:default">
         <div class="srow-icon sri-p"><span class="material-symbols-rounded">wallet</span></div>
-        <div class="srow-content"><div class="srow-label">Savee</div><div class="srow-sub">Version 3.7.2</div></div>
+        <div class="srow-content"><div class="srow-label">Savee</div><div class="srow-sub">Version 3.7.4</div></div>
       </div>
     </div>
-    <div class="app-version-tag">Savee v3.7.2 · Personal Savings Tracker</div>
+    <div class="app-version-tag">Savee v3.7.4 · Personal Savings Tracker</div>
   </div>
 </div>
 
@@ -1175,6 +1228,7 @@ let chartInstance = null, chartGoalId = null, chartDays = 7;
 let pinValue = '', pinStep = 'verify', pinSetupFirst = '';
 let currentNav = 'home', currentStatsTab = 'global';
 let currency = CURRENCIES[0];
+let sortOrder = 'newest';
 
 function load() {
   const raw = localStorage.getItem('savee_v3') || localStorage.getItem('tabungin_v2');
@@ -1185,6 +1239,8 @@ function load() {
   goals.forEach(g => { if (!g.txns) g.txns = []; });
   const savedCurr = localStorage.getItem('savee_currency');
   if (savedCurr) currency = CURRENCIES.find(c => c.code === savedCurr) || CURRENCIES[0];
+  const savedSort = localStorage.getItem('savee_sort');
+  if (savedSort) sortOrder = savedSort;
 }
 
 function save() { localStorage.setItem('savee_v3', JSON.stringify(goals)); }
@@ -1299,15 +1355,78 @@ function applySettingsUI() {
   if (sub) sub.textContent = `${currency.flag} ${currency.name} (${currency.symbol})`;
 }
 
+function getSortedGoals() {
+  const sorted = [...goals];
+  if (sortOrder === 'az')     sorted.sort((a,b) => a.name.localeCompare(b.name));
+  if (sortOrder === 'za')     sorted.sort((a,b) => b.name.localeCompare(a.name));
+  if (sortOrder === 'oldest') sorted.sort((a,b) => (a.created||0) - (b.created||0));
+  if (sortOrder === 'newest') sorted.sort((a,b) => (b.created||0) - (a.created||0));
+  return sorted;
+}
+
+function toggleSortMenu() {
+  const menu = document.getElementById('sortMenu');
+  const btn  = document.getElementById('sortBtn');
+  const isOpen = menu.classList.contains('open');
+  if (isOpen) {
+    closeSortMenu();
+  } else {
+    const r = btn.getBoundingClientRect();
+    menu.style.top   = (r.bottom + 6) + 'px';
+    menu.style.right = (window.innerWidth - r.right) + 'px';
+    menu.classList.add('open');
+    btn.classList.add('active');
+    setTimeout(() => document.addEventListener('click', outsideSortClick, {once:true, capture:true}), 0);
+  }
+}
+
+function outsideSortClick(e) {
+  if (!document.getElementById('sortMenu').contains(e.target) &&
+      !document.getElementById('sortBtn').contains(e.target)) {
+    closeSortMenu();
+  } else {
+    setTimeout(() => document.addEventListener('click', outsideSortClick, {once:true, capture:true}), 0);
+  }
+}
+
+function closeSortMenu() {
+  document.getElementById('sortMenu').classList.remove('open');
+  document.getElementById('sortBtn').classList.remove('active');
+}
+
+function setSort(order) {
+  sortOrder = order;
+  localStorage.setItem('savee_sort', order);
+  closeSortMenu();
+  const labels = {newest:'Newest', oldest:'Oldest', az:'A → Z', za:'Z → A'};
+  document.getElementById('sortBtnLabel').textContent = labels[order];
+  document.querySelectorAll('.sort-menu-item').forEach(el => {
+    el.classList.toggle('selected', el.dataset.sort === order);
+  });
+  render();
+}
+
+function applySortUI() {
+  const labels = {newest:'Newest', oldest:'Oldest', az:'A → Z', za:'Z → A'};
+  const lbl = document.getElementById('sortBtnLabel');
+  if (lbl) lbl.textContent = labels[sortOrder] || 'Newest';
+  document.querySelectorAll('.sort-menu-item').forEach(el => {
+    el.classList.toggle('selected', el.dataset.sort === sortOrder);
+  });
+}
+
 function render() {
   renderStats();
   const el = document.getElementById('goalsList');
   if (!goals.length) {
     el.innerHTML = '<div class="empty-state"><span class="material-symbols-rounded">wallet</span><p>No savings goals yet.<br>Tap <strong>+</strong> to get started!</p></div>';
+    applySortUI();
     return;
   }
-  el.innerHTML = goals.map((g,i) => renderCard(g,i)).join('');
+  const sorted = getSortedGoals();
+  el.innerHTML = sorted.map((g,i) => renderCard(g,i)).join('');
   updateFormLabels();
+  applySortUI();
 }
 
 function updateFormLabels() {
@@ -2298,7 +2417,21 @@ window.addEventListener('popstate',()=>{
   }, { passive: true });
 })();
 
-if ('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js'));
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then(reg => {
+        reg.addEventListener('updatefound', () => {
+          const sw = reg.installing;
+          sw.addEventListener('statechange', () => {
+            if (sw.state === 'installed' && navigator.serviceWorker.controller) {
+              sw.postMessage({type:'SKIP_WAITING'});
+            }
+          });
+        });
+      });
+  });
+}
 
 applyTheme(); load(); render(); history.replaceState({page:'home'},''); initPin();
 </script>
