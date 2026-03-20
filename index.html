@@ -35,7 +35,7 @@
   --accent:  #6c63ff;
   --r:       20px;
   --rsm:     14px;
-  --tt:      background .3s, color .3s, border-color .3s;
+  --tt:      background .35s ease, color .35s ease, border-color .35s ease, box-shadow .35s ease;
 }
 
 [data-theme="dark"] {
@@ -50,6 +50,13 @@
   --sh-sm:   0 2px 12px rgba(0,0,0,0.5);
   --sh-md:   0 6px 24px rgba(0,0,0,0.6);
 }
+
+.theme-flash {
+  position: fixed; inset: 0; z-index: 9999;
+  pointer-events: none; opacity: 0;
+  transition: opacity .18s ease;
+}
+.theme-flash.active { opacity: 1; }
 
 html, body { height: 100%; height: -webkit-fill-available; }
 
@@ -82,7 +89,7 @@ body {
   display: flex;
   flex-direction: column;
   background: var(--bg);
-  transition: transform .38s cubic-bezier(.4,0,.2,1), opacity .38s ease, background .3s;
+  transition: transform .38s cubic-bezier(.4,0,.2,1), opacity .38s ease, var(--tt);
 }
 
 .screen.hidden     { opacity: 0; pointer-events: none; transform: translateX(28px); }
@@ -384,26 +391,33 @@ body {
 .icon-btn:active { transform: scale(0.92); }
 .icon-btn .material-symbols-rounded { font-size: 17px; }
 
-.detail-hero { margin: 4px 14px 14px; border-radius: var(--r); padding: 22px 20px 18px; position: relative; overflow: hidden; }
+.detail-hero { margin: 4px 14px 14px; border-radius: var(--r); padding: 24px 20px 20px; position: relative; overflow: hidden; }
 .detail-hero-inner { position: relative; z-index: 1; }
-.detail-hero-icon  { font-size: 1.9rem; margin-bottom: 7px; display: block; }
-.detail-hero-label { font-size: 0.65rem; font-weight: 700; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
-.detail-hero-amount { font-size: 2.4rem; font-weight: 700; color: white; letter-spacing: -0.04em; line-height: 1; margin-bottom: 4px; }
-.detail-hero-target { font-size: 0.76rem; color: rgba(255,255,255,0.6); font-weight: 500; margin-bottom: 14px; display: flex; align-items: center; gap: 3px; }
+.detail-hero-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
+.detail-hero-icon  { font-size: 2.2rem; display: block; }
+.detail-hero-pct-badge { background: rgba(255,255,255,0.22); border-radius: 99px; padding: 4px 11px; font-size: 0.72rem; font-weight: 700; color: white; }
+.detail-hero-label { font-size: 0.62rem; font-weight: 700; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 3px; }
+.detail-hero-amount { font-size: 2.6rem; font-weight: 700; color: white; letter-spacing: -0.04em; line-height: 1; margin-bottom: 3px; }
+.detail-hero-target { font-size: 0.76rem; color: rgba(255,255,255,0.6); font-weight: 500; margin-bottom: 14px; display: flex; align-items: center; gap: 4px; }
 .detail-hero-target .material-symbols-rounded { font-size: 14px; font-variation-settings: 'FILL' 0, 'wght' 300; }
-.detail-hero-bar  { height: 5px; background: rgba(255,255,255,0.18); border-radius: 99px; overflow: hidden; margin-bottom: 6px; }
+.detail-hero-bar-row { display: flex; align-items: center; gap: 10px; }
+.detail-hero-bar  { flex: 1; height: 6px; background: rgba(255,255,255,0.2); border-radius: 99px; overflow: hidden; }
 .detail-hero-fill { height: 100%; background: white; border-radius: 99px; transition: width .8s cubic-bezier(.4,0,.2,1); }
-.detail-hero-pct  { font-size: 0.72rem; color: rgba(255,255,255,0.75); font-weight: 700; }
+.detail-hero-pct  { font-size: 0.72rem; color: rgba(255,255,255,0.9); font-weight: 700; white-space: nowrap; flex-shrink: 0; }
+.detail-hero-remaining { font-size: 0.72rem; color: rgba(255,255,255,0.6); font-weight: 500; white-space: nowrap; flex-shrink: 0; }
 
-.detail-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin: 0 14px 12px; }
-.stat-card { background: var(--surf); border-radius: var(--rsm); padding: 13px; box-shadow: var(--sh-sm); transition: var(--tt); }
-.stat-label { font-size: 0.63rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--text3); margin-bottom: 4px; }
-.stat-val { font-size: 1rem; font-weight: 700; color: var(--text); letter-spacing: -0.02em; line-height: 1.2; display: flex; align-items: center; gap: 4px; }
-.stat-val .material-symbols-rounded { font-size: 19px; color: var(--text3); font-variation-settings: 'FILL' 0, 'wght' 300; }
+.detail-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin: 0 14px 10px; }
+.stat-card { background: var(--surf); border-radius: var(--rsm); padding: 13px 14px; box-shadow: var(--sh-sm); transition: var(--tt); }
+.stat-label { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--text3); margin-bottom: 5px; }
+.stat-val { font-size: 1rem; font-weight: 700; color: var(--text); letter-spacing: -0.02em; line-height: 1.2; display: flex; align-items: center; gap: 3px; }
+.stat-val .material-symbols-rounded { font-size: 18px; color: var(--text3); font-variation-settings: 'FILL' 0, 'wght' 300; }
 
-.detail-actions { padding: 0 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
-.action-btn { padding: 13px; border: none; border-radius: var(--rsm); font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: transform .15s; }
+.detail-actions { padding: 0 14px 6px; display: flex; flex-direction: column; gap: 8px; }
+.action-row { display: flex; gap: 8px; }
+.action-row .action-btn { flex: 1; }
+.action-btn { padding: 13px 10px; border: none; border-radius: var(--rsm); font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: transform .15s, opacity .15s; }
 .action-btn:active { transform: scale(0.96); }
+.action-btn:disabled { opacity: 0.38; cursor: not-allowed; transform: none; }
 .action-btn .material-symbols-rounded { font-size: 16px; }
 .ab-add  { background: var(--accent); color: white; }
 .ab-sub  { background: rgba(244,63,94,0.1); color: #e11d48; }
@@ -490,17 +504,186 @@ body {
 .numpad-confirm.sub-mode { background: #e11d48; color: white; }
 .numpad-confirm.xfer-mode { background: var(--accent); color: white; }
 
-.transfer-arrow { display: flex; align-items: center; justify-content: center; padding: 4px 0 8px; }
-.transfer-arrow .material-symbols-rounded { font-size: 22px; color: var(--text3); }
-.transfer-goal-select { padding: 0 18px 4px; }
-.transfer-goal-card { display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: var(--surf2); border-radius: var(--rsm); border: 2px solid transparent; cursor: pointer; transition: border-color .15s, background .15s; }
-.transfer-goal-card.selected { border-color: var(--accent); background: var(--surf); }
-.transfer-goal-card:active { background: var(--surf); }
-.tgc-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-.tgc-name { flex: 1; font-size: 0.82rem; font-weight: 600; color: var(--text); }
-.tgc-balance { font-size: 0.72rem; color: var(--text2); font-weight: 500; }
-.tgc-check { font-size: 18px; color: var(--accent); }
-.transfer-section-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--text2); display: block; padding: 10px 18px 6px; }
+.money-success {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 36px 24px 48px; gap: 10px; text-align: center;
+  animation: moneySuccessIn .28s cubic-bezier(.4,0,.2,1) both;
+}
+@keyframes moneySuccessIn { from{opacity:0;transform:translateY(12px) scale(0.94)} to{opacity:1;transform:translateY(0) scale(1)} }
+.money-success-icon {
+  width: 60px; height: 60px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; font-size: 1.8rem;
+  margin-bottom: 4px;
+}
+.money-success-icon.ok   { background: rgba(67,233,123,0.15); }
+.money-success-icon.info { background: rgba(79,195,247,0.15); }
+.money-success-amount { font-size: 1.85rem; font-weight: 700; letter-spacing: -0.04em; }
+.money-success-amount.ok   { color: #16a34a; }
+.money-success-amount.info { color: #0284c7; }
+.money-success-label { font-size: 0.82rem; font-weight: 600; color: var(--text2); }
+.money-success-goal { font-size: 0.76rem; color: var(--text3); font-weight: 500; }
+.money-success-balance { background: var(--surf2); border-radius: var(--rsm); padding: 8px 16px; font-size: 0.78rem; font-weight: 600; color: var(--text); margin-top: 6px; }
+ scrollbar-width: none; -webkit-overflow-scrolling: touch; flex: 1; }
+.xfer-sheet-body::-webkit-scrollbar { display: none; }
+
+.xfer-route {
+  display: flex; align-items: stretch; gap: 0;
+  margin: 6px 18px 0; border-radius: var(--rsm);
+  background: var(--surf2); overflow: hidden;
+}
+
+.xfer-route-side {
+  flex: 1; padding: 14px 16px; min-width: 0;
+}
+
+.xfer-route-side.from { border-right: 1px solid var(--border); }
+
+.xfer-route-label {
+  font-size: 0.6rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text3); margin-bottom: 6px;
+}
+
+.xfer-route-goal {
+  display: flex; align-items: center; gap: 7px; margin-bottom: 6px;
+  min-width: 0;
+}
+
+.xfer-route-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+
+.xfer-route-name {
+  font-size: 0.82rem; font-weight: 700; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  min-width: 0; flex: 1;
+}
+
+.xfer-route-bal {
+  font-size: 0.72rem; font-weight: 600; color: var(--text2);
+}
+
+.xfer-route-after {
+  font-size: 0.72rem; font-weight: 700; margin-top: 3px;
+}
+
+.xfer-route-after.safe   { color: #16a34a; }
+.xfer-route-after.danger { color: #e11d48; }
+.xfer-route-after.dim    { color: var(--text3); }
+
+.xfer-route-center {
+  width: 40px; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.xfer-route-center .material-symbols-rounded { font-size: 18px; color: var(--accent); }
+
+.xfer-amount-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 18px 2px;
+}
+
+.xfer-amount-display {
+  flex: 1; text-align: center;
+}
+
+.xfer-amount-prefix { font-size: 1rem; font-weight: 600; color: var(--text2); }
+
+.xfer-amount-num {
+  font-size: 2.5rem; font-weight: 700; letter-spacing: -0.05em;
+  transition: color .15s;
+}
+
+.xfer-amount-num.over { color: #e11d48; }
+.xfer-amount-num.ok   { color: var(--text); }
+
+.xfer-max-btn {
+  flex-shrink: 0; padding: 7px 12px;
+  border-radius: 99px; border: 1.5px solid var(--border);
+  font-family: 'DM Sans', sans-serif; font-size: 0.7rem; font-weight: 700;
+  color: var(--accent); background: rgba(108,99,255,0.08); cursor: pointer;
+  transition: background .15s;
+}
+.xfer-max-btn:active { background: rgba(108,99,255,0.18); }
+
+.xfer-chips { display: flex; gap: 6px; padding: 4px 18px 8px; overflow-x: auto; scrollbar-width: none; }
+.xfer-chips::-webkit-scrollbar { display: none; }
+
+.xfer-dest-label {
+  font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text2); padding: 8px 18px 8px; display: block;
+}
+
+.xfer-dest-list { padding: 0 14px 6px; display: flex; flex-direction: column; gap: 8px; }
+
+.xfer-dest-card {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 14px; background: var(--surf2); border-radius: var(--rsm);
+  border: 2px solid transparent; cursor: pointer;
+  transition: border-color .18s, background .18s, box-shadow .18s;
+}
+
+.xfer-dest-card.selected {
+  border-color: var(--accent);
+  background: var(--surf);
+  box-shadow: 0 2px 14px rgba(108,99,255,0.14);
+}
+
+.xfer-dest-card:active { background: var(--surf); }
+
+.xdc-emoji { font-size: 1.2rem; flex-shrink: 0; }
+
+.xdc-info { flex: 1; min-width: 0; }
+
+.xdc-name { font-size: 0.82rem; font-weight: 700; color: var(--text); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.xdc-bar-wrap { height: 3px; background: var(--surf3); border-radius: 99px; overflow: hidden; margin-bottom: 3px; }
+.xdc-bar-fill { height: 100%; border-radius: 99px; transition: width .5s cubic-bezier(.4,0,.2,1); }
+
+.xdc-balance { font-size: 0.68rem; color: var(--text2); font-weight: 500; }
+
+.xdc-check { font-size: 20px; color: var(--accent); opacity: 0; transition: opacity .15s; flex-shrink: 0; }
+.xfer-dest-card.selected .xdc-check { opacity: 1; }
+
+.xfer-empty { padding: 16px 18px; font-size: 0.78rem; color: var(--text3); text-align: center; line-height: 1.6; }
+
+.xfer-numpad { padding: 6px 14px 0; flex-shrink: 0; }
+.xfer-confirm {
+  width: 100%; height: 50px; border: none; border-radius: var(--rsm);
+  font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 700;
+  cursor: pointer; margin-top: 6px; margin-bottom: 24px;
+  transition: transform .15s, opacity .15s, background .2s;
+  background: var(--accent); color: white;
+}
+.xfer-confirm:active { transform: scale(0.97); }
+.xfer-confirm:disabled { opacity: 0.38; cursor: not-allowed; transform: none; }
+
+.xfer-success {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 40px 24px 48px; gap: 12px; text-align: center;
+  animation: xferSuccessIn .3s cubic-bezier(.4,0,.2,1) both;
+}
+@keyframes xferSuccessIn { from{opacity:0;transform:scale(0.92)} to{opacity:1;transform:scale(1)} }
+.xfer-success-icon {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: rgba(67,233,123,0.14);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem;
+}
+.xfer-success-title { font-size: 1.1rem; font-weight: 700; color: var(--text); }
+.xfer-success-sub { font-size: 0.78rem; color: var(--text2); font-weight: 500; line-height: 1.5; }
+.xfer-success-route {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--surf2); border-radius: var(--rsm);
+  padding: 10px 16px; font-size: 0.8rem; font-weight: 600; color: var(--text);
+  margin-top: 4px;
+}
+.xfer-success-route .material-symbols-rounded { font-size: 16px; color: var(--accent); }
+.xfer-global-btn {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(108,99,255,0.1); border: 1.5px solid rgba(108,99,255,0.2);
+  border-radius: 11px; padding: 8px 14px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 600;
+  color: var(--accent); cursor: pointer; transition: background .15s;
+}
+.xfer-global-btn:active { background: rgba(108,99,255,0.18); }
+.xfer-global-btn .material-symbols-rounded { font-size: 17px; }
 
 .chart-goal-info { display: flex; align-items: center; gap: 9px; padding: 5px 18px 13px; }
 .chart-goal-dot  { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
@@ -594,6 +777,10 @@ body {
           <div class="app-logo-icon"><span class="material-symbols-rounded">wallet</span></div>
           <span class="app-logo-name">Savee</span>
         </div>
+        <button class="xfer-global-btn" onclick="openGlobalTransferSheet()">
+          <span class="material-symbols-rounded">swap_horiz</span>
+          Transfer
+        </button>
       </div>
     </div>
     <div class="summary-card">
@@ -690,10 +877,10 @@ body {
       <div class="settings-section-label">About</div>
       <div class="settings-row" style="cursor:default">
         <div class="srow-icon sri-p"><span class="material-symbols-rounded">wallet</span></div>
-        <div class="srow-content"><div class="srow-label">Savee</div><div class="srow-sub">Version 3.4.0</div></div>
+        <div class="srow-content"><div class="srow-label">Savee</div><div class="srow-sub">Version 3.7.2</div></div>
       </div>
     </div>
-    <div class="app-version-tag">Savee v3.4 · Personal Savings Tracker</div>
+    <div class="app-version-tag">Savee v3.7.2 · Personal Savings Tracker</div>
   </div>
 </div>
 
@@ -757,43 +944,88 @@ body {
 <div class="sheet-overlay" id="moneySheet">
   <div class="sheet" style="max-height:88vh">
     <div class="sheet-handle"></div>
-    <div class="sheet-head">
-      <div class="sheet-title" id="moneySheetTitle">Add money</div>
-      <button class="btn-close" onclick="closeSheet('moneySheet')"><span class="material-symbols-rounded">close</span></button>
+    <div id="moneyNormalView">
+      <div class="sheet-head">
+        <div class="sheet-title" id="moneySheetTitle">Add money</div>
+        <button class="btn-close" onclick="closeSheet('moneySheet')"><span class="material-symbols-rounded">close</span></button>
+      </div>
+      <div class="money-goal-info">
+        <div class="money-goal-dot" id="moneyGoalDot"></div>
+        <span class="money-goal-name" id="moneyGoalName"></span>
+      </div>
+      <div class="money-display-wrap">
+        <span class="money-display-prefix" id="moneyPrefix">Rp </span><span class="money-display-amount" id="moneyDisplay">0</span>
+        <div class="money-hint" id="moneyHint"></div>
+      </div>
+      <div class="quick-chips" id="quickChips"></div>
+      <div class="numpad"><div class="numpad-grid" id="numpadGrid"></div></div>
     </div>
-    <div class="money-goal-info">
-      <div class="money-goal-dot" id="moneyGoalDot"></div>
-      <span class="money-goal-name" id="moneyGoalName"></span>
+    <div id="moneySuccessView" style="display:none">
+      <div class="sheet-handle" style="margin-bottom:0"></div>
+      <div class="money-success">
+        <div class="money-success-icon" id="moneySuccessIcon">💰</div>
+        <div class="money-success-amount" id="moneySuccessAmount"></div>
+        <div class="money-success-label" id="moneySuccessLabel"></div>
+        <div class="money-success-balance" id="moneySuccessBalance"></div>
+      </div>
     </div>
-    <div class="money-display-wrap">
-      <span class="money-display-prefix" id="moneyPrefix">Rp </span><span class="money-display-amount" id="moneyDisplay">0</span>
-      <div class="money-hint" id="moneyHint"></div>
-    </div>
-    <div class="quick-chips" id="quickChips"></div>
-    <div class="numpad"><div class="numpad-grid" id="numpadGrid"></div></div>
   </div>
 </div>
 
 <div class="sheet-overlay" id="transferSheet">
-  <div class="sheet" style="max-height:92vh">
+  <div class="sheet" style="max-height:94vh">
     <div class="sheet-handle"></div>
-    <div class="sheet-head">
-      <div class="sheet-title">Transfer</div>
-      <button class="btn-close" onclick="closeSheet('transferSheet')"><span class="material-symbols-rounded">close</span></button>
+    <div id="xferNormalView">
+      <div class="sheet-head">
+        <div class="sheet-title">Transfer</div>
+        <button class="btn-close" onclick="closeSheet('transferSheet')"><span class="material-symbols-rounded">close</span></button>
+      </div>
+      <div class="xfer-sheet-body" id="xferSheetBody">
+        <div class="xfer-route">
+          <div class="xfer-route-side from">
+            <div class="xfer-route-label">From</div>
+            <div class="xfer-route-goal">
+              <div class="xfer-route-dot" id="xferFromDot"></div>
+              <span class="xfer-route-name" id="xferFromName"></span>
+            </div>
+            <div class="xfer-route-bal" id="xferFromBal"></div>
+            <div class="xfer-route-after" id="xferFromAfter"></div>
+          </div>
+          <div class="xfer-route-center"><span class="material-symbols-rounded">east</span></div>
+          <div class="xfer-route-side to">
+            <div class="xfer-route-label">To</div>
+            <div class="xfer-route-goal" id="xferToGoalRow">
+              <div class="xfer-route-dot" id="xferToDot" style="background:var(--text3)"></div>
+              <span class="xfer-route-name" id="xferToName" style="color:var(--text3)">Select below</span>
+            </div>
+            <div class="xfer-route-bal" id="xferToBal"></div>
+            <div class="xfer-route-after" id="xferToAfter"></div>
+          </div>
+        </div>
+        <div class="xfer-amount-row">
+          <div class="xfer-amount-display">
+            <span class="xfer-amount-prefix" id="xferPrefix">Rp </span><span class="xfer-amount-num ok" id="xferDisplay">0</span>
+          </div>
+          <button class="xfer-max-btn" onclick="setXferMax()">MAX</button>
+        </div>
+        <div class="xfer-chips" id="xferQuickChips"></div>
+        <span class="xfer-dest-label">Choose destination</span>
+        <div class="xfer-dest-list" id="xferToList"></div>
+        <div class="xfer-numpad">
+          <div class="numpad-grid" id="xferNumpadGrid"></div>
+          <button class="xfer-confirm" id="xferConfirmBtn" onclick="confirmTransfer()" disabled>Select a destination</button>
+        </div>
+      </div>
     </div>
-    <div class="money-goal-info">
-      <div class="money-goal-dot" id="xferFromDot"></div>
-      <span class="money-goal-name" id="xferFromName"></span>
+    <div id="xferSuccessView" style="display:none">
+      <div class="sheet-handle" style="margin-bottom:0"></div>
+      <div class="xfer-success">
+        <div class="xfer-success-icon">✅</div>
+        <div class="xfer-success-title">Transfer Complete</div>
+        <div class="xfer-success-sub" id="xferSuccessSub"></div>
+        <div class="xfer-success-route" id="xferSuccessRoute"></div>
+      </div>
     </div>
-    <div class="money-display-wrap">
-      <span class="money-display-prefix" id="xferPrefix">Rp </span><span class="money-display-amount" id="xferDisplay">0</span>
-      <div class="money-hint" id="xferHint"></div>
-    </div>
-    <div class="quick-chips" id="xferQuickChips"></div>
-    <div class="transfer-arrow"><span class="material-symbols-rounded">south</span></div>
-    <span class="transfer-section-label">Transfer to</span>
-    <div class="transfer-goal-select" id="xferToList"></div>
-    <div class="numpad"><div class="numpad-grid" id="xferNumpadGrid"></div></div>
   </div>
 </div>
 
@@ -885,10 +1117,26 @@ body {
   <button class="pin-reset-btn" id="pinResetBtn" onclick="resetPin()" style="display:none">Forgot PIN? Reset</button>
 </div>
 
+<div class="sheet-overlay" id="xferSourceSheet">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-head">
+      <div class="sheet-title">Transfer from</div>
+      <button class="btn-close" onclick="closeSheet('xferSourceSheet')"><span class="material-symbols-rounded">close</span></button>
+    </div>
+    <div class="sheet-body">
+      <p style="font-size:0.76rem;color:var(--text2);font-weight:500;margin-bottom:14px">Choose which goal to transfer money from.</p>
+      <div class="xfer-dest-list" id="xferSourceList"></div>
+    </div>
+  </div>
+</div>
+
 <div class="confetti-overlay hidden" id="confettiOverlay">
   <div id="confettiCanvas"></div>
   <div class="confetti-message" id="confettiMessage"></div>
 </div>
+
+<div class="theme-flash" id="themeFlash"></div>
 
 <script>
 const COLORS = [
@@ -1010,11 +1258,25 @@ function toggleThemeFromSwitch() {
 }
 
 function applyThemeValue(val) {
-  document.documentElement.setAttribute('data-theme', val);
-  localStorage.setItem('savee_theme', val);
-  const icon = val === 'dark' ? 'light_mode' : 'dark_mode';
-  document.querySelectorAll('[id^="themeIcon"]').forEach(el => el.textContent = icon);
-  document.getElementById('themeColorMeta').setAttribute('content', val === 'dark' ? '#0a0a0a' : '#6c63ff');
+  const isDark = val === 'dark';
+  const flash = document.getElementById('themeFlash');
+
+  
+  if (flash) {
+    flash.style.background = isDark ? 'rgba(0,0,0,0.18)' : 'rgba(255,255,255,0.22)';
+    flash.classList.add('active');
+  }
+
+  setTimeout(() => {
+    document.documentElement.setAttribute('data-theme', val);
+    localStorage.setItem('savee_theme', val);
+    const icon = isDark ? 'light_mode' : 'dark_mode';
+    document.querySelectorAll('[id^="themeIcon"]').forEach(el => el.textContent = icon);
+    document.getElementById('themeColorMeta').setAttribute('content', isDark ? '#0a0a0a' : '#6c63ff');
+    if (flash) {
+      flash.classList.remove('active');
+    }
+  }, 140);
 }
 
 function applyTheme() {
@@ -1068,7 +1330,11 @@ function renderCard(g, i) {
   const targetLabel = inf ? `<span class="material-symbols-rounded">all_inclusive</span>` : `of ${fAmt(g.target)}`;
   const overlay = isClosed ? `<div class="card-status-overlay"><span class="material-symbols-rounded">${g.status==='completed'?'check_circle':'cancel'}</span>${g.status==='completed'?'Completed':'Cancelled'}</div>` : '';
   const btnRow = !isClosed
-    ? `<div class="card-btn-row" onclick="event.stopPropagation()"><button class="card-btn" onclick="openMoneySheet('add','${g.id}')"><span class="material-symbols-rounded">add</span></button><button class="card-btn" onclick="openMoneySheet('sub','${g.id}')"><span class="material-symbols-rounded">remove</span></button></div>`
+    ? `<div class="card-btn-row" onclick="event.stopPropagation()">
+        <button class="card-btn" onclick="openMoneySheet('add','${g.id}')"><span class="material-symbols-rounded">add</span></button>
+        <button class="card-btn card-btn-xfer" onclick="openTransferSheet('${g.id}')" ${g.current<=0?'style="opacity:0.4"':''}><span class="material-symbols-rounded">swap_horiz</span></button>
+        <button class="card-btn" onclick="openMoneySheet('sub','${g.id}')"><span class="material-symbols-rounded">remove</span></button>
+      </div>`
     : `<div class="card-btn-row" onclick="event.stopPropagation()"><button class="card-btn" onclick="restoreGoal('${g.id}')"><span class="material-symbols-rounded">restart_alt</span></button></div>`;
   return `<div class="goal-card" onclick="goDetail('${g.id}')" style="animation-delay:${i*.06}s">
     <div class="goal-card-inner ${g.color}">
@@ -1194,21 +1460,52 @@ function renderDetail(id) {
   const hero = document.getElementById('detailHero');
   hero.className = `detail-hero ${g.color}`;
   const heroTarget = inf ? `<span class="material-symbols-rounded">all_inclusive</span>` : fAmt(g.target);
-  const heroPct = inf ? `<div class="detail-hero-pct">Unlimited target</div>` : `<div class="detail-hero-bar"><div class="detail-hero-fill" style="width:${p}%"></div></div><div class="detail-hero-pct">${p}% reached</div>`;
-  hero.innerHTML = `<div class="card-deco1"></div><div class="card-deco2"></div><div class="detail-hero-inner"><span class="detail-hero-icon">${g.emoji||'🎯'}</span><div class="detail-hero-label">${esc(g.name)}</div><div class="detail-hero-amount">${fAmt(g.current)}</div><div class="detail-hero-target">Target: ${heroTarget}</div>${heroPct}</div>`;
-  const daysStr = days!==null ? (days>0?`${days} days`:days===0?'Today':'Overdue') : '—';
-  const dlStr = dl!==null ? (dl===0?'🎉 Reached':`${fAmt(dl)}/day`) : '—';
-  const remaining = inf ? `<div class="stat-val"><span class="material-symbols-rounded">all_inclusive</span></div>` : `<div class="stat-val">${fAmt(Math.max(0,g.target-g.current))}</div>`;
-  document.getElementById('detailStats').innerHTML = `<div class="stat-card"><div class="stat-label">Days left</div><div class="stat-val">${daysStr}</div></div><div class="stat-card"><div class="stat-label">Save/day</div><div class="stat-val">${dlStr}</div></div><div class="stat-card"><div class="stat-label">Remaining</div>${remaining}</div><div class="stat-card"><div class="stat-label">Deadline</div><div class="stat-val" style="font-size:0.78rem">${fDate(g.deadline)||'—'}</div></div>`;
-  let acts = '';
+  const heroPctBar = inf
+    ? `<div class="detail-hero-bar-row"><div class="detail-hero-pct">Unlimited</div></div>`
+    : `<div class="detail-hero-bar-row">
+         <div class="detail-hero-pct">${p}%</div>
+         <div class="detail-hero-bar"><div class="detail-hero-fill" style="width:${p}%"></div></div>
+         ${g.target > 0 ? `<div class="detail-hero-remaining">${fAmt(Math.max(0,g.target-g.current))} left</div>` : ''}
+       </div>`;
+  hero.innerHTML = `
+    <div class="card-deco1"></div><div class="card-deco2"></div>
+    <div class="detail-hero-inner">
+      <div class="detail-hero-top">
+        <span class="detail-hero-icon">${g.emoji||'🎯'}</span>
+      </div>
+      <div class="detail-hero-label">${esc(g.name)}</div>
+      <div class="detail-hero-amount">${fAmt(g.current)}</div>
+      <div class="detail-hero-target">Target: ${heroTarget}</div>
+      ${heroPctBar}
+    </div>`;
+  const daysStr = days!==null ? (days>0?`${days}d`:days===0?'Today':'Past') : '—';
+  const dlStr = dl!==null ? (dl===0?'✓':`${fAmt(dl)}`) : '—';
+  const remainVal = inf ? `<span class="material-symbols-rounded">all_inclusive</span>` : fAmt(Math.max(0,g.target-g.current));
+  document.getElementById('detailStats').innerHTML = `
+    <div class="stat-card"><div class="stat-label">Saved</div><div class="stat-val">${fAmt(g.current)}</div></div>
+    <div class="stat-card"><div class="stat-label">Remaining</div><div class="stat-val">${remainVal}</div></div>
+    <div class="stat-card"><div class="stat-label">Days Left</div><div class="stat-val">${daysStr}</div></div>
+    <div class="stat-card"><div class="stat-label">Per Day</div><div class="stat-val">${dlStr}</div></div>`;
+  const el = document.getElementById('detailActions');
   if (!isClosed) {
-    acts = `<button class="action-btn ab-add" onclick="openMoneySheet('add','${g.id}')"><span class="material-symbols-rounded">add</span>Add</button><button class="action-btn ab-sub" onclick="openMoneySheet('sub','${g.id}')"><span class="material-symbols-rounded">remove</span>Withdraw</button><button class="action-btn ab-xfer" onclick="openTransferSheet('${g.id}')"><span class="material-symbols-rounded">swap_horiz</span>Transfer</button><button class="action-btn ab-ok" onclick="completeGoal('${g.id}')"><span class="material-symbols-rounded">check_circle</span>Complete</button><button class="action-btn ab-can" onclick="cancelGoal('${g.id}')"><span class="material-symbols-rounded">cancel</span>Cancel</button>`;
-    document.getElementById('detailActions').style.gridTemplateColumns = '1fr 1fr';
+    const canXfer = g.current > 0;
+    el.innerHTML = `
+      <div class="action-row">
+        <button class="action-btn ab-add" onclick="openMoneySheet('add','${g.id}')"><span class="material-symbols-rounded">add</span>Add</button>
+        <button class="action-btn ab-xfer" onclick="openTransferSheet('${g.id}')" ${!canXfer?'disabled':''}><span class="material-symbols-rounded">swap_horiz</span>Transfer</button>
+        <button class="action-btn ab-sub" onclick="openMoneySheet('sub','${g.id}')"><span class="material-symbols-rounded">remove</span>Withdraw</button>
+      </div>
+      <div class="action-row">
+        <button class="action-btn ab-ok" onclick="completeGoal('${g.id}')"><span class="material-symbols-rounded">check_circle</span>Complete</button>
+        <button class="action-btn ab-can" onclick="cancelGoal('${g.id}')"><span class="material-symbols-rounded">cancel</span>Cancel</button>
+      </div>`;
   } else {
-    acts = `<button class="action-btn ab-res" onclick="restoreGoal('${g.id}')"><span class="material-symbols-rounded">restart_alt</span>Reactivate</button><button class="action-btn ab-del" onclick="deleteGoal('${g.id}')"><span class="material-symbols-rounded">delete</span>Delete</button>`;
-    document.getElementById('detailActions').style.gridTemplateColumns = '1fr 1fr';
+    el.innerHTML = `
+      <div class="action-row">
+        <button class="action-btn ab-res" onclick="restoreGoal('${g.id}')"><span class="material-symbols-rounded">restart_alt</span>Reactivate</button>
+        <button class="action-btn ab-del" onclick="deleteGoal('${g.id}')"><span class="material-symbols-rounded">delete</span>Delete</button>
+      </div>`;
   }
-  document.getElementById('detailActions').innerHTML = acts;
   renderMilestoneRow(g);
 }
 
@@ -1223,11 +1520,33 @@ function renderMilestoneRow(g) {
   }).join('');
 }
 
-function openSheet(id) { document.getElementById(id).classList.add('open'); document.body.style.overflow = 'hidden'; }
+function openSheet(id) {
+  document.getElementById(id).classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
 function closeSheet(id) {
   document.getElementById(id).classList.remove('open');
   document.body.style.overflow = '';
-  if (id==='chartSheet' && chartInstance) { chartInstance.destroy(); chartInstance = null; }
+  if (id === 'chartSheet' && chartInstance) { chartInstance.destroy(); chartInstance = null; }
+  if (id === 'moneySheet') {
+    
+    setTimeout(() => {
+      const success = document.getElementById('moneySuccessView');
+      const normal  = document.getElementById('moneyNormalView');
+      if (success) success.style.display = 'none';
+      if (normal)  normal.style.display  = '';
+    }, 340);
+  }
+  if (id === 'transferSheet') {
+    
+    setTimeout(() => {
+      const success = document.getElementById('xferSuccessView');
+      const normal  = document.getElementById('xferNormalView');
+      if (success) success.style.display = 'none';
+      if (normal)  normal.style.display  = '';
+    }, 340);
+  }
 }
 
 function buildCP(sel) {
@@ -1336,72 +1655,241 @@ function confirmMoney() {
   const idx = goals.findIndex(g => g.id==moneyGoalId);
   if (idx===-1) return;
   const prevPct2 = pct(goals[idx]);
+  const goalName = goals[idx].name;
+  const goalEmoji = goals[idx].emoji || '🎯';
   if (moneyMode==='add') {
     goals[idx].current += amount;
     if (!goals[idx].txns) goals[idx].txns = [];
     goals[idx].txns.push({ts:Date.now(), amt:amount, type:'add'});
-    addToHistory(`+${fAmt(amount)} added`, 'ok', goals[idx].name);
+    addToHistory(`+${fAmt(amount)} added`, 'ok', goalName);
     checkMilestones(goals[idx], prevPct2);
   } else {
     if (amount>goals[idx].current) { addToHistory('Insufficient balance!', 'err'); return; }
     goals[idx].current -= amount;
     if (!goals[idx].txns) goals[idx].txns = [];
     goals[idx].txns.push({ts:Date.now(), amt:-amount, type:'sub'});
-    addToHistory(`${fAmt(amount)} withdrawn`, 'info', goals[idx].name);
+    addToHistory(`${fAmt(amount)} withdrawn`, 'info', goalName);
   }
   save(); render();
-  closeSheet('moneySheet');
   if (currentDetailId==moneyGoalId) renderDetail(moneyGoalId);
+  showMoneySuccess(amount, moneyMode, goalName, goalEmoji, goals[idx].current);
+}
+
+function showMoneySuccess(amount, mode, goalName, goalEmoji, newBalance) {
+  const isAdd = mode === 'add';
+  const icon    = document.getElementById('moneySuccessIcon');
+  const amt     = document.getElementById('moneySuccessAmount');
+  const label   = document.getElementById('moneySuccessLabel');
+  const balance = document.getElementById('moneySuccessBalance');
+  icon.textContent    = isAdd ? '💰' : '📤';
+  icon.className      = 'money-success-icon ' + (isAdd ? 'ok' : 'info');
+  amt.textContent     = (isAdd ? '+' : '−') + fAmt(amount);
+  amt.className       = 'money-success-amount ' + (isAdd ? 'ok' : 'info');
+  label.textContent   = (isAdd ? 'Added to ' : 'Withdrawn from ') + goalEmoji + ' ' + goalName;
+  balance.textContent = 'New balance: ' + fAmt(newBalance);
+  document.getElementById('moneyNormalView').style.display = 'none';
+  document.getElementById('moneySuccessView').style.display = '';
+  setTimeout(() => closeSheet('moneySheet'), 1600);
 }
 
 function openTransferSheet(fromId) {
-  xferGoalId = fromId; xferToId = null; xferVal = ''; moneyVal = '';
+  xferGoalId = fromId; xferToId = null; xferVal = '';
   const g = goals.find(x => x.id==fromId);
   if (!g) return;
+  if (g.current <= 0) { addToHistory('No balance to transfer', 'err'); return; }
   document.getElementById('xferFromDot').style.background = colorHex(g.color);
   document.getElementById('xferFromName').textContent = g.name;
+  document.getElementById('xferFromBal').textContent = `Balance: ${fAmt(g.current)}`;
+  document.getElementById('xferFromAfter').textContent = '';
+  document.getElementById('xferFromAfter').className = 'xfer-route-after dim';
+  document.getElementById('xferToDot').style.background = 'var(--text3)';
+  document.getElementById('xferToName').textContent = 'Select below';
+  document.getElementById('xferToName').style.color = 'var(--text3)';
+  document.getElementById('xferToBal').textContent = '';
+  document.getElementById('xferToAfter').textContent = '';
   document.getElementById('xferDisplay').textContent = '0';
-  document.getElementById('xferDisplay').style.color = 'var(--text)';
+  document.getElementById('xferDisplay').className = 'xfer-amount-num ok';
   document.getElementById('xferPrefix').textContent = currency.symbol + ' ';
-  document.getElementById('xferHint').textContent = `Balance: ${fAmt(g.current)}`;
-  const chips = [getDefaultChips()[0], getDefaultChips()[1], getDefaultChips()[2], g.current].filter(v => v>0 && v<=g.current).slice(0,5);
-  document.getElementById('xferQuickChips').innerHTML = chips.map(v => `<div class="qchip" onclick="setXferVal(${v})">${fAmt(v)}</div>`).join('');
+  const chips = getDefaultChips().filter(v => v > 0 && v <= g.current).slice(0, 5);
+  if (g.current > 0 && !chips.includes(g.current)) chips.push(g.current);
+  document.getElementById('xferQuickChips').innerHTML = chips.slice(0,5).map(v =>
+    `<div class="qchip" onclick="setXferVal(${v})">${v===g.current?'MAX':fAmt(v)}</div>`
+  ).join('');
   const otherGoals = goals.filter(x => x.id !== fromId && x.status === 'active');
-  document.getElementById('xferToList').innerHTML = otherGoals.length
-    ? otherGoals.map(x => `<div class="transfer-goal-card" id="tgc-${x.id}" onclick="selectXferTarget('${x.id}')"><div class="tgc-dot" style="background:${colorHex(x.color)}"></div><div class="tgc-name">${esc(x.name)}</div><div class="tgc-balance">${fAmt(x.current)}</div><span class="material-symbols-rounded tgc-check">check_circle</span></div>`).join('')
-    : '<div style="padding:8px 18px;font-size:0.78rem;color:var(--text3)">No other active goals to transfer to.</div>';
-  const keys = ['1','2','3','4','5','6','7','8','9','000','0','del'];
-  document.getElementById('xferNumpadGrid').innerHTML = keys.map(k =>
-    k==='del' ? `<button class="numpad-key del" onclick="xferNumpadKey('del')"><span class="material-symbols-rounded">backspace</span></button>` : `<button class="numpad-key" onclick="xferNumpadKey('${k}')">${k}</button>`
-  ).join('') + `<button class="numpad-confirm xfer-mode" onclick="confirmTransfer()">Transfer</button>`;
+  renderXferDestList(otherGoals);
+  buildXferNumpad();
+  updateXferState();
+  document.getElementById('xferSheetBody').scrollTop = 0;
   openSheet('transferSheet');
 }
 
-function setXferVal(v) { xferVal = String(v); document.getElementById('xferDisplay').textContent = fMoney(parseInt(xferVal)||0); }
+function openGlobalTransferSheet() {
+  const activeGoals = goals.filter(g => g.status === 'active' && g.current > 0);
+  if (activeGoals.length < 2) {
+    addToHistory('Need at least 2 active goals with balance to transfer', 'err');
+    return;
+  }
+  if (activeGoals.length === 2) {
+    openTransferSheet(activeGoals[0].id);
+    return;
+  }
+  openSourcePickerSheet();
+}
+
+function openSourcePickerSheet() {
+  const activeGoals = goals.filter(g => g.status === 'active' && g.current > 0);
+  const el = document.getElementById('xferSourceList');
+  el.innerHTML = activeGoals.map(g => {
+    const p2 = pct(g);
+    return `<div class="xfer-dest-card" onclick="pickXferSource('${g.id}')">
+      <div class="xdc-emoji">${g.emoji||'🎯'}</div>
+      <div class="xdc-info">
+        <div class="xdc-name">${esc(g.name)}</div>
+        ${p2!==null?`<div class="xdc-bar-wrap"><div class="xdc-bar-fill" style="width:${p2}%;background:${colorHex(g.color)}"></div></div>`:''}
+        <div class="xdc-balance">${fAmt(g.current)}${p2!==null?` · ${p2}%`:''}</div>
+      </div>
+      <span class="material-symbols-rounded" style="font-size:18px;color:var(--text3)">chevron_right</span>
+    </div>`;
+  }).join('');
+  openSheet('xferSourceSheet');
+}
+
+function pickXferSource(id) {
+  closeSheet('xferSourceSheet');
+  setTimeout(() => openTransferSheet(id), 150);
+}
+
+function renderXferDestList(otherGoals) {
+  if (!otherGoals.length) {
+    document.getElementById('xferToList').innerHTML = '<div class="xfer-empty">No other active goals available.<br>Add more goals to transfer between them.</div>';
+    return;
+  }
+  document.getElementById('xferToList').innerHTML = otherGoals.map(x => {
+    const p2 = pct(x);
+    const pBar = p2 !== null ? `<div class="xdc-bar-wrap"><div class="xdc-bar-fill" style="width:${p2}%;background:${colorHex(x.color)}"></div></div>` : '';
+    return `<div class="xfer-dest-card" id="xdc-${x.id}" onclick="selectXferTarget('${x.id}')">
+      <div class="xdc-emoji">${x.emoji||'🎯'}</div>
+      <div class="xdc-info">
+        <div class="xdc-name">${esc(x.name)}</div>
+        ${pBar}
+        <div class="xdc-balance">${fAmt(x.current)}${p2!==null?` · ${p2}%`:''}</div>
+      </div>
+      <span class="material-symbols-rounded xdc-check">check_circle</span>
+    </div>`;
+  }).join('');
+}
+
+function buildXferNumpad() {
+  const keys = ['1','2','3','4','5','6','7','8','9','000','0','del'];
+  document.getElementById('xferNumpadGrid').innerHTML = keys.map(k =>
+    k==='del'
+      ? `<button class="numpad-key del" onclick="xferNumpadKey('del')"><span class="material-symbols-rounded">backspace</span></button>`
+      : `<button class="numpad-key" onclick="xferNumpadKey('${k}')">${k}</button>`
+  ).join('');
+}
+
+function setXferVal(v) {
+  xferVal = String(v);
+  updateXferDisplay();
+  updateXferState();
+}
+
+function setXferMax() {
+  const g = goals.find(x => x.id==xferGoalId);
+  if (!g) return;
+  xferVal = String(g.current);
+  updateXferDisplay();
+  updateXferState();
+}
 
 function xferNumpadKey(k) {
   if (k==='del') { xferVal = xferVal.slice(0,-1); }
   else { if (xferVal.length>=13) return; xferVal = (xferVal+k).replace(/^0+/,'')||''; }
-  document.getElementById('xferDisplay').textContent = fMoney(parseInt(xferVal)||0);
+  updateXferDisplay();
+  updateXferState();
+}
+
+function updateXferDisplay() {
+  const amount = parseInt(xferVal)||0;
+  const src = goals.find(x => x.id==xferGoalId);
+  const isOver = src && amount > src.current;
+  const el = document.getElementById('xferDisplay');
+  el.textContent = fMoney(amount);
+  el.className = 'xfer-amount-num ' + (isOver ? 'over' : 'ok');
+}
+
+function updateXferState() {
+  const amount = parseInt(xferVal)||0;
+  const src = goals.find(x => x.id==xferGoalId);
+  const dst = goals.find(x => x.id==xferToId);
+  const isOver = src && amount > src.current;
+  const isValid = amount > 0 && !isOver && xferToId !== null;
+
+  if (src) {
+    const newFrom = src.current - amount;
+    const fromAfter = document.getElementById('xferFromAfter');
+    if (amount > 0) {
+      fromAfter.textContent = isOver ? `Over by ${fAmt(amount - src.current)}` : `After: ${fAmt(Math.max(0,newFrom))}`;
+      fromAfter.className = 'xfer-route-after ' + (isOver ? 'danger' : 'safe');
+    } else {
+      fromAfter.textContent = '';
+    }
+  }
+
+  if (dst) {
+    const newTo = dst.current + amount;
+    const toAfter = document.getElementById('xferToAfter');
+    if (amount > 0 && !isOver) {
+      toAfter.textContent = `After: ${fAmt(newTo)}`;
+      toAfter.className = 'xfer-route-after safe';
+    } else {
+      toAfter.textContent = dst ? `Balance: ${fAmt(dst.current)}` : '';
+      toAfter.className = 'xfer-route-after dim';
+    }
+  }
+
+  const btn = document.getElementById('xferConfirmBtn');
+  if (!xferToId) {
+    btn.textContent = 'Select a destination';
+    btn.disabled = true;
+  } else if (amount <= 0) {
+    btn.textContent = 'Enter an amount';
+    btn.disabled = true;
+  } else if (isOver) {
+    btn.textContent = 'Insufficient balance';
+    btn.disabled = true;
+  } else {
+    btn.textContent = `Transfer ${fAmt(amount)}`;
+    btn.disabled = false;
+  }
 }
 
 function selectXferTarget(id) {
   xferToId = id;
-  document.querySelectorAll('.transfer-goal-card').forEach(c => c.classList.remove('selected'));
-  const el = document.getElementById(`tgc-${id}`);
+  document.querySelectorAll('.xfer-dest-card').forEach(c => c.classList.remove('selected'));
+  const el = document.getElementById(`xdc-${id}`);
   if (el) el.classList.add('selected');
+  const dst = goals.find(x => x.id==id);
+  if (dst) {
+    document.getElementById('xferToDot').style.background = colorHex(dst.color);
+    document.getElementById('xferToName').textContent = dst.name;
+    document.getElementById('xferToName').style.color = 'var(--text)';
+    document.getElementById('xferToBal').textContent = `Balance: ${fAmt(dst.current)}`;
+  }
+  updateXferState();
 }
 
 function confirmTransfer() {
   const amount = parseInt(xferVal)||0;
-  if (amount<=0) { addToHistory('Please enter a valid amount', 'err'); return; }
-  if (!xferToId) { addToHistory('Please select a destination goal', 'err'); return; }
+  if (amount<=0 || !xferToId) return;
   const fromIdx = goals.findIndex(g => g.id==xferGoalId);
   const toIdx   = goals.findIndex(g => g.id==xferToId);
   if (fromIdx===-1 || toIdx===-1) return;
-  if (amount > goals[fromIdx].current) { addToHistory('Insufficient balance!', 'err'); return; }
+  if (amount > goals[fromIdx].current) return;
   const fromName = goals[fromIdx].name;
+  const fromEmoji = goals[fromIdx].emoji||'🎯';
   const toName   = goals[toIdx].name;
+  const toEmoji  = goals[toIdx].emoji||'🎯';
   const prevPct = pct(goals[toIdx]);
   goals[fromIdx].current -= amount;
   goals[toIdx].current   += amount;
@@ -1409,12 +1897,24 @@ function confirmTransfer() {
   if (!goals[toIdx].txns) goals[toIdx].txns = [];
   goals[fromIdx].txns.push({ts:Date.now(), amt:-amount, type:'xfer-out', to:toName});
   goals[toIdx].txns.push({ts:Date.now(), amt:amount, type:'xfer-in', from:fromName});
-  addToHistory(`${fAmt(amount)} transferred`, 'xfer', `${fromName} → ${toName}`);
+  addToHistory(`${fAmt(amount)} transferred`, 'xfer', `${fromEmoji} ${fromName} → ${toEmoji} ${toName}`);
   checkMilestones(goals[toIdx], prevPct);
   save(); render();
-  closeSheet('transferSheet');
+  showXferSuccess(amount, fromName, fromEmoji, toName, toEmoji);
   if (currentDetailId==xferGoalId || currentDetailId==xferToId) renderDetail(currentDetailId);
 }
+
+function showXferSuccess(amount, fromName, fromEmoji, toName, toEmoji) {
+  document.getElementById('xferSuccessSub').textContent   = fAmt(amount) + ' moved successfully';
+  document.getElementById('xferSuccessRoute').innerHTML   =
+    `<span>${fromEmoji} ${esc(fromName)}</span>
+     <span class="material-symbols-rounded">east</span>
+     <span>${toEmoji} ${esc(toName)}</span>`;
+  document.getElementById('xferNormalView').style.display = 'none';
+  document.getElementById('xferSuccessView').style.display = '';
+  setTimeout(() => closeSheet('transferSheet'), 1800);
+}
+
 
 function completeGoal(id) { const i=goals.findIndex(g=>g.id==id); if(i===-1)return; goals[i].status='completed'; save();render();renderDetail(id); addToHistory('Goal completed! Amazing! 🎉','ok',goals[i].name); }
 function cancelGoal(id)   { const i=goals.findIndex(g=>g.id==id); if(i===-1)return; goals[i].status='cancelled'; save();render();renderDetail(id); addToHistory('Goal cancelled','err',goals[i].name); }
@@ -1693,15 +2193,110 @@ window.addEventListener('popstate',()=>{
   else if (isDetailVisible()) { goHome(); }
 });
 
-let swipeStartX=0,swipeStartY=0,swipeActive=false;
-document.getElementById('screenDetail').addEventListener('touchstart',e=>{
-  const t=e.touches[0]; swipeStartX=t.clientX; swipeStartY=t.clientY; swipeActive=swipeStartX<32;
-},{passive:true});
-document.getElementById('screenDetail').addEventListener('touchend',e=>{
-  if (!swipeActive) return; swipeActive=false;
-  const t=e.changedTouches[0];
-  if (t.clientX-swipeStartX>60&&Math.abs(t.clientY-swipeStartY)<80&&isDetailVisible()&&!isAnySheetOpen()) goHome();
-},{passive:true});
+
+(function() {
+  const EDGE_W    = 28;   
+  const COMMIT_X  = 90;   
+  const MAX_DRAG  = 180;  
+
+  let startX = 0, startY = 0, curX = 0;
+  let tracking = false, committed = false;
+
+  const detail = document.getElementById('screenDetail');
+  const home   = document.getElementById('screenHome');
+
+  function canGesture() {
+    return isDetailVisible() && !isAnySheetOpen();
+  }
+
+  function applyDrag(dx) {
+    const clamped = Math.min(dx, MAX_DRAG);
+    const progress = Math.min(clamped / COMMIT_X, 1);
+    
+    detail.style.transition = 'none';
+    detail.style.transform  = `translateX(${clamped}px)`;
+    detail.style.opacity    = String(1 - progress * 0.18);
+    
+    home.classList.remove('hidden', 'slide-left');
+    home.style.transition   = 'none';
+    home.style.transform    = `translateX(${-28 + progress * 28}px)`;
+    home.style.opacity      = String(0.55 + progress * 0.45);
+  }
+
+  function resetDrag(animate) {
+    const dur = animate ? '.32s' : '0s';
+    detail.style.transition = `transform ${dur} cubic-bezier(.4,0,.2,1), opacity ${dur} ease`;
+    detail.style.transform  = '';
+    detail.style.opacity    = '';
+    home.style.transition   = `transform ${dur} cubic-bezier(.4,0,.2,1), opacity ${dur} ease`;
+    home.style.transform    = '';
+    home.style.opacity      = '';
+    
+    if (animate) {
+      setTimeout(() => {
+        if (isDetailVisible()) {
+          home.classList.add('slide-left');
+        }
+        detail.style.transition = '';
+        home.style.transition   = '';
+      }, 340);
+    }
+  }
+
+  function commit() {
+    committed = true;
+    detail.style.transition = 'transform .3s cubic-bezier(.4,0,.2,1), opacity .3s ease';
+    detail.style.transform  = `translateX(100%)`;
+    detail.style.opacity    = '0';
+    home.style.transition   = 'transform .3s cubic-bezier(.4,0,.2,1), opacity .3s ease';
+    home.style.transform    = 'translateX(0)';
+    home.style.opacity      = '1';
+    setTimeout(() => {
+      detail.style.transition = '';
+      detail.style.transform  = '';
+      detail.style.opacity    = '';
+      home.style.transition   = '';
+      home.style.transform    = '';
+      home.style.opacity      = '';
+      goHome();
+    }, 310);
+  }
+
+  detail.addEventListener('touchstart', e => {
+    if (!canGesture()) return;
+    const t = e.touches[0];
+    if (t.clientX > EDGE_W) return;
+    startX = t.clientX; startY = t.clientY; curX = startX;
+    tracking = true; committed = false;
+  }, { passive: true });
+
+  detail.addEventListener('touchmove', e => {
+    if (!tracking || committed) return;
+    const t = e.touches[0];
+    curX = t.clientX;
+    const dx = curX - startX;
+    const dy = Math.abs(t.clientY - startY);
+    if (dx < 0 || dy > 40) { tracking = false; resetDrag(true); return; }
+    applyDrag(dx);
+  }, { passive: true });
+
+  detail.addEventListener('touchend', e => {
+    if (!tracking || committed) return;
+    tracking = false;
+    const dx = curX - startX;
+    if (dx >= COMMIT_X) {
+      commit();
+    } else {
+      resetDrag(true);
+    }
+  }, { passive: true });
+
+  detail.addEventListener('touchcancel', () => {
+    if (!tracking) return;
+    tracking = false;
+    resetDrag(true);
+  }, { passive: true });
+})();
 
 if ('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js'));
 
