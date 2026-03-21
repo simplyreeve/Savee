@@ -1,4 +1,4 @@
-const CACHE_STATIC  = 'savee-static-v3.7.4';
+const CACHE_STATIC  = 'savee-static-v3.8';
 const CACHE_FONTS   = 'savee-fonts-v1';
 const CACHE_CDN     = 'savee-cdn-v1';
 

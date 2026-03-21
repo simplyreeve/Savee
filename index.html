@@ -312,6 +312,47 @@ body {
 .ring-inf .material-symbols-rounded { font-size: 19px; font-variation-settings: 'FILL' 0, 'wght' 300; }
 .card-name { font-size: 1rem; font-weight: 700; color: white; letter-spacing: -0.02em; margin-bottom: 2px; }
 .card-meta { font-size: 0.68rem; color: rgba(255,255,255,0.7); font-weight: 500; line-height: 1.5; }
+
+.card-health {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 0.62rem; font-weight: 700; letter-spacing: 0.02em;
+  padding: 2px 8px 2px 5px; border-radius: 99px;
+  background: rgba(255,255,255,0.18); color: white;
+  margin-top: 5px;
+}
+.card-health .material-symbols-rounded { font-size: 12px; }
+.card-health.ahead  { background: rgba(67,233,123,0.28); }
+.card-health.behind { background: rgba(244,63,94,0.28); }
+.card-health.ontrack { background: rgba(255,255,255,0.18); }
+
+.streak-badge {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 0.62rem; font-weight: 700;
+  padding: 2px 8px 2px 5px; border-radius: 99px;
+  background: rgba(255,255,255,0.18); color: white;
+  margin-left: 5px;
+}
+.streak-badge .material-symbols-rounded { font-size: 12px; }
+
+.detail-health {
+  display: flex; align-items: center; gap: 8px;
+  margin: 0 14px 10px; padding: 11px 14px;
+  border-radius: var(--rsm); font-size: 0.82rem; font-weight: 600;
+  box-shadow: var(--sh-sm);
+}
+.detail-health .material-symbols-rounded { font-size: 18px; }
+.detail-health.ahead   { background: rgba(67,233,123,0.12); color: #16a34a; }
+.detail-health.behind  { background: rgba(244,63,94,0.1);   color: #e11d48; }
+.detail-health.ontrack { background: rgba(108,99,255,0.1);  color: var(--accent); }
+.detail-health.done    { background: rgba(67,233,123,0.12); color: #16a34a; }
+.detail-health-text { flex: 1; }
+.detail-health-title { font-weight: 700; margin-bottom: 1px; }
+.detail-health-sub   { font-size: 0.7rem; opacity: 0.75; font-weight: 500; }
+.detail-streak {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 0.82rem; font-weight: 700;
+}
+.detail-streak .material-symbols-rounded { font-size: 17px; color: #f59e0b; }
 .card-bottom { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 9px; }
 .card-current { font-size: 1.15rem; font-weight: 700; color: white; letter-spacing: -0.03em; line-height: 1; margin-bottom: 2px; }
 .card-target-label { font-size: 0.66rem; color: rgba(255,255,255,0.65); font-weight: 500; display: flex; align-items: center; gap: 3px; }
@@ -535,6 +576,8 @@ body {
 [data-theme="dark"] .numpad-key { background: var(--surf2); }
 [data-theme="light"] .numpad-key:active { background: #dde0ef; }
 [data-theme="dark"]  .numpad-key:active { background: #2a2a2a; }
+.numpad-key.dot { background: var(--surf3); color: var(--text); font-size: 1.4rem; font-weight: 700; }
+.numpad-key.dot:active { background: var(--surf2); }
 .numpad-key.del { background: rgba(244,63,94,0.1); color: #e11d48; }
 .numpad-key.del .material-symbols-rounded { font-size: 20px; }
 .numpad-confirm { grid-column: span 3; height: 50px; border: none; border-radius: var(--rsm); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 700; cursor: pointer; margin-top: 2px; margin-bottom: 26px; transition: transform .15s; }
@@ -930,10 +973,10 @@ body {
       <div class="settings-section-label">About</div>
       <div class="settings-row" style="cursor:default">
         <div class="srow-icon sri-p"><span class="material-symbols-rounded">wallet</span></div>
-        <div class="srow-content"><div class="srow-label">Savee</div><div class="srow-sub">Version 3.7.4</div></div>
+        <div class="srow-content"><div class="srow-label">Savee</div><div class="srow-sub">Version 3.8.0</div></div>
       </div>
     </div>
-    <div class="app-version-tag">Savee v3.7.4 · Personal Savings Tracker</div>
+    <div class="app-version-tag">Savee v3.8 · Personal Savings Tracker</div>
   </div>
 </div>
 
@@ -951,6 +994,7 @@ body {
   <div class="screen-scroll">
     <div class="milestone-row" id="milestoneRow"></div>
     <div class="detail-stats" id="detailStats"></div>
+    <div id="detailHealthBanner"></div>
     <div class="detail-actions" id="detailActions"></div>
   </div>
 </div>
@@ -1249,13 +1293,79 @@ function uid() { return Date.now() + Math.random().toString(36).slice(2,6); }
 function isInfinite(g) { return !g.target || g.target === 0; }
 
 function fMoney(n) {
-  n = Math.max(0, Math.round(n));
-  if (currency.code === 'IDR') return n.toLocaleString('id-ID');
-  if (currency.code === 'JPY' || currency.code === 'KRW') return n.toLocaleString('en-US');
-  return n.toLocaleString('en-US');
+  if (typeof n === 'string' && n.includes('.')) {
+    const parts = n.split('.');
+    const intPart = parseInt(parts[0]) || 0;
+    const decPart = parts[1] !== undefined ? parts[1] : '';
+    const fmt = currency.code === 'IDR'
+      ? intPart.toLocaleString('id-ID')
+      : intPart.toLocaleString('en-US');
+    return decPart !== '' ? fmt + '.' + decPart : fmt + '.';
+  }
+  const rounded = Math.max(0, Math.round(Number(n) * 100) / 100);
+  if (usesDecimals() && rounded % 1 !== 0) {
+    const int = Math.floor(rounded);
+    const dec = (rounded - int).toFixed(2).slice(1);
+    const fmt = int.toLocaleString('en-US');
+    return fmt + dec;
+  }
+  const whole = Math.max(0, Math.round(Number(n)));
+  if (currency.code === 'IDR') return whole.toLocaleString('id-ID');
+  return whole.toLocaleString('en-US');
 }
 
-function fAmt(n) { return `${currency.symbol}${fMoney(n)}`; }
+function usesDecimals() {
+  return !['IDR','JPY','KRW'].includes(currency.code);
+}
+
+function parseMoneyVal(s) {
+  if (!s) return 0;
+  return parseFloat(s) || 0;
+}
+
+function goalHealth(g) {
+  if (isInfinite(g) || !g.deadline || g.status !== 'active') return null;
+  const dLeft = daysLeft(g.deadline);
+  if (dLeft === null || dLeft <= 0) return null;
+  const needed = (g.target - g.current) / dLeft;
+  if (needed <= 0) return {status:'done', label:'Goal reached!', icon:'emoji_events'};
+  const txns = (g.txns || []).filter(t => t.type === 'add');
+  if (!txns.length) return {status:'behind', label:'No savings yet', icon:'trending_down'};
+  const oldest = Math.min(...txns.map(t => t.ts));
+  const daysActive = Math.max(1, Math.ceil((Date.now() - oldest) / 86400000));
+  const totalIn = txns.reduce((s, t) => s + t.amt, 0);
+  const actualDaily = totalIn / daysActive;
+  const ratio = actualDaily / needed;
+  if (ratio >= 1.1) return {status:'ahead',   label:'Ahead of schedule', icon:'trending_up'};
+  if (ratio >= 0.85) return {status:'ontrack', label:'On track',          icon:'check_circle'};
+  return {status:'behind', label:'Behind schedule', icon:'trending_down'};
+}
+
+function goalStreak(g) {
+  const txns = (g.txns || []).filter(t => t.type === 'add' || t.type === 'xfer-in');
+  if (!txns.length) return 0;
+  const daySet = new Set(txns.map(t => {
+    const d = new Date(t.ts);
+    return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+  }));
+  let streak = 0;
+  const now = new Date();
+  for (let i = 0; i < 365; i++) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - i);
+    const key = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+    if (daySet.has(key)) streak++;
+    else if (i > 0) break;
+  }
+  return streak;
+}
+
+function fAmt(n) {
+  if (!usesDecimals()) return `${currency.symbol}${fMoney(n)}`;
+  const v = Math.round(Number(n) * 100) / 100;
+  if (v % 1 === 0) return `${currency.symbol}${v.toLocaleString('en-US')}`;
+  return `${currency.symbol}${v.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+}
 
 function daysLeft(dl) {
   if (!dl) return null;
@@ -1445,6 +1555,11 @@ function renderCard(g, i) {
   const daysStr = days !== null ? (days > 0 ? `${days} days left` : days === 0 ? 'Today!' : 'Overdue') : 'No deadline';
   const dlStr = dl !== null ? (dl === 0 ? '🎉 Goal reached!' : `Save ${fAmt(dl)}/day`) : '';
   const metaLine = [daysStr, dlStr].filter(Boolean).join(' · ');
+  const health = !isClosed ? goalHealth(g) : null;
+  const streak = !isClosed ? goalStreak(g) : 0;
+  const healthChip = health ? `<span class="card-health ${health.status}"><span class="material-symbols-rounded">${health.icon}</span>${health.label}</span>` : '';
+  const streakBadge = streak >= 2 ? `<span class="streak-badge"><span class="material-symbols-rounded">local_fire_department</span>${streak}d</span>` : '';
+  const healthRow = (healthChip || streakBadge) ? `<div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-top:5px">${healthChip}${streakBadge}</div>` : '';
   const ringInner = inf ? `<div class="ring-inf"><span class="material-symbols-rounded">all_inclusive</span></div>` : `<div class="ring-pct">${p}%</div>`;
   const targetLabel = inf ? `<span class="material-symbols-rounded">all_inclusive</span>` : `of ${fAmt(g.target)}`;
   const overlay = isClosed ? `<div class="card-status-overlay"><span class="material-symbols-rounded">${g.status==='completed'?'check_circle':'cancel'}</span>${g.status==='completed'?'Completed':'Cancelled'}</div>` : '';
@@ -1470,6 +1585,7 @@ function renderCard(g, i) {
       </div>
       <div class="card-name">${esc(g.name)}</div>
       <div class="card-meta">${metaLine}</div>
+      ${healthRow}
       <div class="card-bottom">
         <div>
           <div class="card-current">${fAmt(g.current)}</div>
@@ -1600,11 +1716,18 @@ function renderDetail(id) {
   const daysStr = days!==null ? (days>0?`${days}d`:days===0?'Today':'Past') : '—';
   const dlStr = dl!==null ? (dl===0?'✓':`${fAmt(dl)}`) : '—';
   const remainVal = inf ? `<span class="material-symbols-rounded">all_inclusive</span>` : fAmt(Math.max(0,g.target-g.current));
+  const streak = goalStreak(g);
+  const health = !isClosed ? goalHealth(g) : null;
   document.getElementById('detailStats').innerHTML = `
     <div class="stat-card"><div class="stat-label">Saved</div><div class="stat-val">${fAmt(g.current)}</div></div>
     <div class="stat-card"><div class="stat-label">Remaining</div><div class="stat-val">${remainVal}</div></div>
     <div class="stat-card"><div class="stat-label">Days Left</div><div class="stat-val">${daysStr}</div></div>
-    <div class="stat-card"><div class="stat-label">Per Day</div><div class="stat-val">${dlStr}</div></div>`;
+    <div class="stat-card"><div class="stat-label">Streak</div><div class="stat-val"><span class="material-symbols-rounded" style="font-size:17px;color:#f59e0b">local_fire_department</span>${streak > 0 ? streak + 'd' : '—'}</div></div>`;
+  if (health && !isClosed) {
+    document.getElementById('detailHealthBanner').innerHTML = `<div class="detail-health ${health.status}"><span class="material-symbols-rounded">${health.icon}</span><div class="detail-health-text"><div class="detail-health-title">${health.label}</div><div class="detail-health-sub">${health.status==='ahead'?'You\'re saving faster than needed — great work!':health.status==='behind'?`Save ${fAmt(dl||0)}/day to stay on track.`:'You\'re right on pace to hit your goal.'}</div></div></div>`;
+  } else {
+    document.getElementById('detailHealthBanner').innerHTML = '';
+  }
   const el = document.getElementById('detailActions');
   if (!isClosed) {
     const canXfer = g.current > 0;
@@ -1736,7 +1859,7 @@ function openMoneySheet(mode, id) {
   document.getElementById('moneyDisplay').style.color = mode==='add' ? 'var(--text)' : '#e11d48';
   document.getElementById('moneyPrefix').textContent = currency.symbol + ' ';
   document.getElementById('moneyHint').textContent = mode==='add' ? `Saved: ${fAmt(g.current)}` : `Balance: ${fAmt(g.current)}`;
-  const chips = mode==='add' ? getDefaultChips() : [getDefaultChips()[0], getDefaultChips()[1], getDefaultChips()[2], g.current].filter(v => v>0 && v<=g.current).slice(0,5);
+  const chips = mode==='add' ? getDefaultChips() : [getDefaultChips()[0], getDefaultChips()[1], getDefaultChips()[2], g.current].filter(v => v > 0 && v <= g.current).filter((v,i,a) => a.indexOf(v) === i).slice(0,5);
   buildMoneyChips(chips); buildNumpad(mode);
   openSheet('moneySheet');
 }
@@ -1750,47 +1873,61 @@ function buildMoneyChips(vals) {
   document.getElementById('quickChips').innerHTML = vals.map(v => `<div class="qchip" onclick="setMoneyVal(${v})">${fAmt(v)}</div>`).join('');
 }
 
-function setMoneyVal(v) { moneyVal = String(v); document.getElementById('moneyDisplay').textContent = fMoney(parseInt(moneyVal)||0); }
+function setMoneyVal(v) { moneyVal = String(v); document.getElementById('moneyDisplay').textContent = fMoney(moneyVal); }
 
 function buildNumpad(mode) {
-  const keys = ['1','2','3','4','5','6','7','8','9','000','0','del'];
+  const dec = usesDecimals();
+  const keys = ['1','2','3','4','5','6','7','8','9', dec ? '.' : '000', '0','del'];
   const modeClass = mode === 'sub' ? 'sub-mode' : mode === 'xfer' ? 'xfer-mode' : 'add-mode';
   const label = mode === 'sub' ? 'Withdraw' : mode === 'xfer' ? 'Transfer' : 'Add';
   const confirmFn = mode === 'xfer' ? 'confirmTransfer()' : 'confirmMoney()';
-  document.getElementById('numpadGrid').innerHTML = keys.map(k =>
-    k==='del' ? `<button class="numpad-key del" onclick="numpadKey('del')"><span class="material-symbols-rounded">backspace</span></button>` : `<button class="numpad-key" onclick="numpadKey('${k}')">${k}</button>`
-  ).join('') + `<button class="numpad-confirm ${modeClass}" onclick="${confirmFn}">${label}</button>`;
+  document.getElementById('numpadGrid').innerHTML = keys.map(k => {
+    if (k === 'del') return `<button class="numpad-key del" onclick="numpadKey('del')"><span class="material-symbols-rounded">backspace</span></button>`;
+    if (k === '.') return `<button class="numpad-key dot" onclick="numpadKey('.')">.</button>`;
+    return `<button class="numpad-key" onclick="numpadKey('${k}')">${k}</button>`;
+  }).join('') + `<button class="numpad-confirm ${modeClass}" onclick="${confirmFn}">${label}</button>`;
 }
 
 function numpadKey(k) {
-  if (k==='del') { moneyVal = moneyVal.slice(0,-1); }
-  else { if (moneyVal.length>=13) return; moneyVal = (moneyVal+k).replace(/^0+/,'')||''; }
-  document.getElementById('moneyDisplay').textContent = fMoney(parseInt(moneyVal)||0);
+  if (k === 'del') {
+    moneyVal = moneyVal.slice(0, -1);
+  } else if (k === '.') {
+    if (!usesDecimals() || moneyVal.includes('.')) return;
+    moneyVal = (moneyVal || '0') + '.';
+  } else if (k === '000') {
+    if (moneyVal.length >= 13) return;
+    moneyVal = (moneyVal + '000').replace(/^0+/, '') || '';
+  } else {
+    if (moneyVal.length >= 13) return;
+    if (moneyVal.includes('.') && moneyVal.split('.')[1].length >= 2) return;
+    moneyVal = (moneyVal + k).replace(/^0+([^.])/, '$1') || '';
+  }
+  document.getElementById('moneyDisplay').textContent = fMoney(moneyVal || '0');
 }
 
 function confirmMoney() {
-  const amount = parseInt(moneyVal)||0;
-  if (amount<=0) { addToHistory('Please enter a valid amount', 'err'); return; }
-  const idx = goals.findIndex(g => g.id==moneyGoalId);
-  if (idx===-1) return;
+  const amount = parseMoneyVal(moneyVal);
+  if (amount <= 0) { addToHistory('Please enter a valid amount', 'err'); return; }
+  const idx = goals.findIndex(g => g.id == moneyGoalId);
+  if (idx === -1) return;
   const prevPct2 = pct(goals[idx]);
   const goalName = goals[idx].name;
   const goalEmoji = goals[idx].emoji || '🎯';
-  if (moneyMode==='add') {
-    goals[idx].current += amount;
+  if (moneyMode === 'add') {
+    goals[idx].current = Math.round((goals[idx].current + amount) * 100) / 100;
     if (!goals[idx].txns) goals[idx].txns = [];
-    goals[idx].txns.push({ts:Date.now(), amt:amount, type:'add'});
+    goals[idx].txns.push({ts: Date.now(), amt: amount, type: 'add'});
     addToHistory(`+${fAmt(amount)} added`, 'ok', goalName);
     checkMilestones(goals[idx], prevPct2);
   } else {
-    if (amount>goals[idx].current) { addToHistory('Insufficient balance!', 'err'); return; }
-    goals[idx].current -= amount;
+    if (amount > goals[idx].current) { addToHistory('Insufficient balance!', 'err'); return; }
+    goals[idx].current = Math.round((goals[idx].current - amount) * 100) / 100;
     if (!goals[idx].txns) goals[idx].txns = [];
-    goals[idx].txns.push({ts:Date.now(), amt:-amount, type:'sub'});
+    goals[idx].txns.push({ts: Date.now(), amt: -amount, type: 'sub'});
     addToHistory(`${fAmt(amount)} withdrawn`, 'info', goalName);
   }
   save(); render();
-  if (currentDetailId==moneyGoalId) renderDetail(moneyGoalId);
+  if (currentDetailId == moneyGoalId) renderDetail(moneyGoalId);
   showMoneySuccess(amount, moneyMode, goalName, goalEmoji, goals[idx].current);
 }
 
