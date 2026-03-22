@@ -605,7 +605,8 @@ body {
 .money-success-label { font-size: 0.82rem; font-weight: 600; color: var(--text2); }
 .money-success-goal { font-size: 0.76rem; color: var(--text3); font-weight: 500; }
 .money-success-balance { background: var(--surf2); border-radius: var(--rsm); padding: 8px 16px; font-size: 0.78rem; font-weight: 600; color: var(--text); margin-top: 6px; }
- scrollbar-width: none; -webkit-overflow-scrolling: touch; flex: 1; }
+
+.xfer-sheet-body { overflow-y: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; flex: 1; }
 .xfer-sheet-body::-webkit-scrollbar { display: none; }
 
 .xfer-route {
@@ -725,7 +726,7 @@ body {
 
 .xfer-empty { padding: 16px 18px; font-size: 0.78rem; color: var(--text3); text-align: center; line-height: 1.6; }
 
-.xfer-numpad { padding: 6px 14px 0; flex-shrink: 0; }
+.xfer-numpad { padding: 6px 14px 0; }
 .xfer-confirm {
   width: 100%; height: 50px; border: none; border-radius: var(--rsm);
   font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 700;
@@ -973,10 +974,10 @@ body {
       <div class="settings-section-label">About</div>
       <div class="settings-row" style="cursor:default">
         <div class="srow-icon sri-p"><span class="material-symbols-rounded">wallet</span></div>
-        <div class="srow-content"><div class="srow-label">Savee</div><div class="srow-sub">Version 3.8.0</div></div>
+        <div class="srow-content"><div class="srow-label">Savee</div><div class="srow-sub">Version 3.9.0</div></div>
       </div>
     </div>
-    <div class="app-version-tag">Savee v3.8 · Personal Savings Tracker</div>
+    <div class="app-version-tag">Savee v3.9 · Personal Savings Tracker</div>
   </div>
 </div>
 
@@ -1072,7 +1073,7 @@ body {
 <div class="sheet-overlay" id="transferSheet">
   <div class="sheet" style="max-height:94vh">
     <div class="sheet-handle"></div>
-    <div id="xferNormalView">
+    <div id="xferNormalView" style="display:flex;flex-direction:column;flex:1;overflow:hidden;min-height:0">
       <div class="sheet-head">
         <div class="sheet-title">Transfer</div>
         <button class="btn-close" onclick="closeSheet('transferSheet')"><span class="material-symbols-rounded">close</span></button>
